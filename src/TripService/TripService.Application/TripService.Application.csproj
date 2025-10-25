@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TripService.Domain\TripService.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

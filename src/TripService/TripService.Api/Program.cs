@@ -1,4 +1,7 @@
-using System;
+using Microsoft.EntityFrameworkCore;
+using TripService.Application.Abstractions;
+using TripService.Infrastructure.Data;
+using TripService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,15 +11,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.Configure<JwtSettings>(
-    builder.Configuration.GetSection("Jwt")
-);
-builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IUserRepository, EfUserRepository>();
-builder.Services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITripRepository, EfTripRepository>();
+builder.Services.AddScoped<ITripService, TripService.Application.Services.TripService>();
 var app = builder.Build();
+builder.Services.AddDbContext<TripDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using UserService.Application.Abstractions;
-using UserService.Application.Dtos;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace UserService.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
