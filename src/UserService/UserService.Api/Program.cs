@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
 using System;
+using UserService.Application.Abstractions;
+using UserService.Application.Services;
+using UserService.Infrastructure.Auth;
+using UserService.Infrastructure.Data;
+using UserService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt")
 );
-builder.Services.AddDbContext<AppDbContext>(opt =>
+builder.Services.AddDbContext<UserDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUserRepository, EfUserRepository>();
 builder.Services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();

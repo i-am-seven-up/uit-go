@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UserService.Application.Abstractions;
+using UserService.Application.Dtos;
 
 namespace UserService.Api.Controllers
 {
@@ -9,7 +11,7 @@ namespace UserService.Api.Controllers
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto, CancellationToken ct)
-        {
+        {   
             var u = await _authService.RegisterAsync(dto.Email, dto.Password, dto.FullName, ct);
             return Ok(new { u.Id, u.Email, u.FullName });
         }
