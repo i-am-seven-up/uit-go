@@ -1,9 +1,39 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Api", "DriverService.Api\DriverService.Api.csproj", "{744A0F5B-BB24-4446-B760-50ED1C96133E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Application", "DriverService.Application\DriverService.Application.csproj", "{F573D397-C45E-4D3E-ABC4-D016F5D775BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Domain", "DriverService.Domain\DriverService.Domain.csproj", "{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Infrastructure", "DriverService.Infrastructure\DriverService.Infrastructure.csproj", "{65292C7E-ACFF-4216-B78F-DED0DA81A645}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{744A0F5B-BB24-4446-B760-50ED1C96133E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744A0F5B-BB24-4446-B760-50ED1C96133E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744A0F5B-BB24-4446-B760-50ED1C96133E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744A0F5B-BB24-4446-B760-50ED1C96133E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F573D397-C45E-4D3E-ABC4-D016F5D775BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F573D397-C45E-4D3E-ABC4-D016F5D775BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F573D397-C45E-4D3E-ABC4-D016F5D775BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F573D397-C45E-4D3E-ABC4-D016F5D775BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65292C7E-ACFF-4216-B78F-DED0DA81A645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65292C7E-ACFF-4216-B78F-DED0DA81A645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65292C7E-ACFF-4216-B78F-DED0DA81A645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65292C7E-ACFF-4216-B78F-DED0DA81A645}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

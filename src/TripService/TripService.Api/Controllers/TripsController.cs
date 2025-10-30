@@ -24,5 +24,6 @@ namespace TripService.Api.Controllers
             await _tripService.CancelAsync(id, ct);
             return NoContent();
         }
+
     }
 }
