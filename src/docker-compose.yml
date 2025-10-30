@@ -1,50 +1,39 @@
-version: "3.9"
 services:
-  gateway:
-    build:
-      context: ./gateway
-      dockerfile: ./gateway/Nginx.Dockerfile
-    ports:
-      - "8080:80"
-    depends_on:
-      - user-service
-      - trip-service
-      - driver-service
-
   user-service:
     build:
-      context: .
-      dockerfile: ./deploy/docker/UserService.Dockerfile
+      context: ./UserService
+      dockerfile: ../deploy/docker/UserService.Dockerfile   
+    ports: ["5001:8080"]
     environment:
       - ConnectionStrings__Default=Host=postgres-user;Port=5432;Database=uitgo_user;Username=postgres;Password=postgres
       - Jwt__Secret=PLEASE_CHANGE_THIS_DEMO_SECRET
-    depends_on:
-      - postgres-user
-    ports:
-      - "5001:8080"
+    depends_on: [postgres-user]
 
   trip-service:
     build:
-      context: .
-      dockerfile: ./deploy/docker/TripService.Dockerfile
+      context: ./TripService
+      dockerfile: ../deploy/docker/TripService.Dockerfile   
+    ports: ["5002:8080"]
     environment:
       - ConnectionStrings__Default=Host=postgres-trip;Port=5432;Database=uitgo_trip;Username=postgres;Password=postgres
-    depends_on:
-      - postgres-trip
-      - driver-service
-    ports:
-      - "5002:8080"
+    depends_on: [postgres-trip, driver-service]
 
   driver-service:
     build:
-      context: .
-      dockerfile: ./deploy/docker/DriverService.Dockerfile
+      context: ./DriverService
+      dockerfile: ../deploy/docker/DriverService.Dockerfile 
+    ports: ["5003:8080"]
     environment:
       - ConnectionStrings__Default=Host=postgres-driver;Port=5432;Database=uitgo_driver;Username=postgres;Password=postgres
-    depends_on:
-      - postgres-driver
-    ports:
-      - "5003:8080"
+    depends_on: [postgres-driver]
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: ./Nginx.Dockerfile  
+    ports: ["8080:80"]
+    depends_on: [user-service, trip-service, driver-service]
+
 
   postgres-user:
     image: postgres:16
