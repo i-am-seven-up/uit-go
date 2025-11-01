@@ -1,0 +1,2441 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+ApiGateway/ApiGateway.sln
+ApiGateway/ApiGateway/ApiGateway.csproj
+ApiGateway/ApiGateway/ApiGateway.http
+ApiGateway/ApiGateway/appsettings.Development.json
+ApiGateway/ApiGateway/appsettings.json
+ApiGateway/ApiGateway/Program.cs
+ApiGateway/ApiGateway/Properties/launchSettings.json
+deploy/docker/ApiGateway.Dockerfile
+deploy/docker/DriverService.Dockerfile
+deploy/docker/TripService.Dockerfile
+deploy/docker/UserService.Dockerfile
+docker-compose.yml
+DriverService/DriverService.Api/appsettings.Development.json
+DriverService/DriverService.Api/appsettings.json
+DriverService/DriverService.Api/Controllers/DriversController.cs
+DriverService/DriverService.Api/DriverService.Api.csproj
+DriverService/DriverService.Api/DriverService.Api.http
+DriverService/DriverService.Api/Program.cs
+DriverService/DriverService.Api/Properties/launchSettings.json
+DriverService/DriverService.Application/Abstractions/IDriverRepository.cs
+DriverService/DriverService.Application/Abstractions/IDriverService.cs
+DriverService/DriverService.Application/Class1.cs
+DriverService/DriverService.Application/DriverService.Application.csproj
+DriverService/DriverService.Application/Services/DriverService.cs
+DriverService/DriverService.Domain/DriverService.Domain.csproj
+DriverService/DriverService.Domain/Entities/Driver.cs
+DriverService/DriverService.Domain/ValueObjects/GeoPoint.cs
+DriverService/DriverService.Infrastructure/Data/DriverDbContext.cs
+DriverService/DriverService.Infrastructure/DriverService.Infrastructure.csproj
+DriverService/DriverService.Infrastructure/Repositories/EfDriverRepository.cs
+DriverService/DriverService.sln
+DriverService/Protos/driver.proto
+LICENSE
+nginx_gateway/nginx.conf
+nginx_gateway/Nginx.Dockerfile
+README.md
+TripService/TripService.Api/appsettings.Development.json
+TripService/TripService.Api/appsettings.json
+TripService/TripService.Api/Controllers/TripsController.cs
+TripService/TripService.Api/Program.cs
+TripService/TripService.Api/Properties/launchSettings.json
+TripService/TripService.Api/TripService.Api.csproj
+TripService/TripService.Api/TripService.Api.http
+TripService/TripService.Application/Abstractions/ITripRepository.cs
+TripService/TripService.Application/Abstractions/ITripService.cs
+TripService/TripService.Application/Services/TripService.cs
+TripService/TripService.Application/TripService.Application.csproj
+TripService/TripService.Domain/Entities/Trip.cs
+TripService/TripService.Domain/TripService.Domain.csproj
+TripService/TripService.Infrastructure/Data/TripDbContext.cs
+TripService/TripService.Infrastructure/Repositories/EfTripRepository.cs
+TripService/TripService.Infrastructure/TripService.Infrastructure.csproj
+TripService/TripService.sln
+UserService/UserService.Api/appsettings.Development.json
+UserService/UserService.Api/appsettings.json
+UserService/UserService.Api/Controllers/AuthController.cs
+UserService/UserService.Api/Program.cs
+UserService/UserService.Api/Properties/launchSettings.json
+UserService/UserService.Api/UserService.Api.csproj
+UserService/UserService.Api/UserService.Api.http
+UserService/UserService.Application/Abstractions/IAuthService.cs
+UserService/UserService.Application/Abstractions/IJwtTokenProvider.cs
+UserService/UserService.Application/Abstractions/IUserRepository.cs
+UserService/UserService.Application/Dtos/LoginDto.cs
+UserService/UserService.Application/Dtos/RegisterDto.cs
+UserService/UserService.Application/Services/AuthService.cs
+UserService/UserService.Application/UserService.Application.csproj
+UserService/UserService.Domain/Entities/User.cs
+UserService/UserService.Domain/UserService.Domain.csproj
+UserService/UserService.Infrastructure/Auth/JwtSettings.cs
+UserService/UserService.Infrastructure/Auth/JwtTokenProvider.cs
+UserService/UserService.Infrastructure/Data/UserDbContext.cs
+UserService/UserService.Infrastructure/Repositories/EfUserRepository.cs
+UserService/UserService.Infrastructure/UserService.Infrastructure.csproj
+UserService/UserService.sln
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="ApiGateway/ApiGateway.sln">
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{74ABE4CF-DA41-4FAD-AA11-08B36E200C88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{74ABE4CF-DA41-4FAD-AA11-08B36E200C88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74ABE4CF-DA41-4FAD-AA11-08B36E200C88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74ABE4CF-DA41-4FAD-AA11-08B36E200C88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74ABE4CF-DA41-4FAD-AA11-08B36E200C88}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {338C0B0F-7D97-440A-AA9A-7F87E1ACB375}
+	EndGlobalSection
+EndGlobal
+</file>
+
+<file path="ApiGateway/ApiGateway/ApiGateway.csproj">
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="ApiGateway/ApiGateway/ApiGateway.http">
+@ApiGateway_HostAddress = http://localhost:5148
+
+GET {{ApiGateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+</file>
+
+<file path="ApiGateway/ApiGateway/appsettings.Development.json">
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+</file>
+
+<file path="ApiGateway/ApiGateway/appsettings.json">
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ReverseProxy": {
+    "Routes": {
+      "user-route": {
+        "ClusterId": "userCluster",
+        "Match": { "Path": "/api/users/{**catch-all}" }
+      },
+      "trip-route": {
+        "ClusterId": "tripCluster",
+        "Match": { "Path": "/api/trips/{**catch-all}" }
+      },
+      "driver-route": {
+        "ClusterId": "driverCluster",
+        "Match": { "Path": "/api/drivers/{**catch-all}" }
+      }
+    },
+    "Clusters": {
+      "userCluster": {
+        "Destinations": {
+          "destination1": { "Address": "http://user-service:8080/" }
+        }
+      },
+      "tripCluster": {
+        "Destinations": {
+          "destination1": { "Address": "http://trip-service:8080/" }
+        }
+      },
+      "driverCluster": {
+        "Destinations": {
+          "destination1": { "Address": "http://driver-service:8080/" }
+        }
+      }
+    }
+  }
+
+}
+</file>
+
+<file path="ApiGateway/ApiGateway/Program.cs">
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+</file>
+
+<file path="ApiGateway/ApiGateway/Properties/launchSettings.json">
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:22818",
+      "sslPort": 44369
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5148",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7066;http://localhost:5148",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+</file>
+
+<file path="deploy/docker/ApiGateway.Dockerfile">
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore ./ApiGateway/ApiGateway.csproj \
+ && dotnet publish ./ApiGateway/ApiGateway.csproj -c Release -o /app/out
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/out .
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "ApiGateway.dll"]
+</file>
+
+<file path="deploy/docker/DriverService.Dockerfile">
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore ./DriverService/DriverService.Api.csproj \
+ && dotnet publish ./DriverService/DriverService.Api.csproj -c Release -o /app/out
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/out .
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+ENTRYPOINT ["dotnet","DriverService.Api.dll"]
+</file>
+
+<file path="deploy/docker/TripService.Dockerfile">
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore ./TripService/TripService.Api.csproj \
+ && dotnet publish ./TripService/TripService.Api.csproj -c Release -o /app/out
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/out .
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+ENTRYPOINT ["dotnet","TripService.Api.dll"]
+</file>
+
+<file path="deploy/docker/UserService.Dockerfile">
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore ./src/UserService/UserService.Api.csproj \
+ && dotnet publish ./src/UserService/UserService.Api.csproj -c Release -o /app/out
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/out .
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+ENTRYPOINT ["dotnet","UserService.Api.dll"]
+</file>
+
+<file path="docker-compose.yml">
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: ./deploy/docker/UserService.Dockerfile   
+    ports: ["5001:8080"]
+    environment:
+      - ConnectionStrings__Default=Host=postgres-user;Port=5432;Database=uitgo_user;Username=postgres;Password=postgres
+      - Jwt__Secret=PLEASE_CHANGE_THIS_DEMO_SECRET
+    depends_on: [postgres-user]
+
+  driver-service:
+    build:
+      context: .
+      dockerfile: ./deploy/docker/DriverService.Dockerfile 
+    ports: ["5003:8080"]
+    environment:
+      - ConnectionStrings__Default=Host=postgres-driver;Port=5432;Database=uitgo_driver;Username=postgres;Password=postgres
+    depends_on: [postgres-driver]
+    
+  trip-service:
+    build:
+      context: .
+      dockerfile: ./deploy/docker/TripService.Dockerfile   
+    ports: ["5002:8080"]
+    environment:
+      - ConnectionStrings__Default=Host=postgres-trip;Port=5432;Database=uitgo_trip;Username=postgres;Password=postgres
+    depends_on: [postgres-trip, driver-service]
+
+  
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ./deploy/docker/ApiGateway.Dockerfile
+    ports: ["8080:80"]
+    depends_on: [user-service, trip-service, driver-service]
+
+
+  # gateway:
+  #   build:
+  #     context: ./gateway
+  #     dockerfile: ./Nginx.Dockerfile  
+  #   ports: ["8080:80"]
+  #   depends_on: [user-service, trip-service, driver-service]
+
+
+  postgres-user:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: uitgo_user
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_user:/var/lib/postgresql/data
+
+  postgres-trip:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: uitgo_trip
+    ports:
+      - "5434:5432"
+    volumes:
+      - pg_trip:/var/lib/postgresql/data
+
+  postgres-driver:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: uitgo_driver
+    ports:
+      - "5435:5432"
+    volumes:
+      - pg_driver:/var/lib/postgresql/data
+
+volumes:
+  pg_user: {}
+  pg_trip: {}
+  pg_driver: {}
+</file>
+
+<file path="DriverService/DriverService.Api/appsettings.Development.json">
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+</file>
+
+<file path="DriverService/DriverService.Api/appsettings.json">
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "Default": "Host=postgres-driver;Port=5432;Database=uitgo_driver;Username=postgres;Password=postgres"
+  }
+}
+</file>
+
+<file path="DriverService/DriverService.Api/Controllers/DriversController.cs">
+using DriverService.Application.Abstractions;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DriverService.Api.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DriversController : ControllerBase
+    {
+        private readonly IDriverService _svc;
+        public DriversController(IDriverService svc) => _svc = svc;
+
+        [HttpPut("{id:guid}/status")]
+        public Task SetStatus(Guid id, [FromQuery] bool online, CancellationToken ct) => _svc.SetOnlineAsync(id, online, ct);
+
+        [HttpPut("{id:guid}/location")]
+        public Task UpdateLocation(Guid id, [FromQuery] double lat, [FromQuery] double lng, CancellationToken ct) =>
+            _svc.UpdateLocationAsync(id, lat, lng, ct);
+    }
+}
+</file>
+
+<file path="DriverService/DriverService.Api/DriverService.Api.csproj">
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.76.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\DriverService.Application\DriverService.Application.csproj" />
+    <ProjectReference Include="..\DriverService.Infrastructure\DriverService.Infrastructure.csproj" />
+	  <Protobuf Include="..\Protos\driver.proto" GrpcServices="Server" ProtoRoot=".." />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="DriverService/DriverService.Api/DriverService.Api.http">
+@DriverService.Api_HostAddress = http://localhost:5172
+
+GET {{DriverService.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+</file>
+
+<file path="DriverService/DriverService.Api/Program.cs">
+using DriverService.Application.Abstractions;
+using DriverService.Application.Services;
+using DriverService.Infrastructure.Data;
+using DriverService.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<DriverDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddScoped<IDriverRepository, EfDriverRepository>();
+builder.Services.AddScoped<IDriverService, DriverService.Application.Services.DriverService>();
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+</file>
+
+<file path="DriverService/DriverService.Api/Properties/launchSettings.json">
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:64687",
+      "sslPort": 44342
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5172",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7129;http://localhost:5172",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+</file>
+
+<file path="DriverService/DriverService.Application/Abstractions/IDriverRepository.cs">
+using DriverService.Domain.Domain;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DriverService.Application.Abstractions
+{
+    public interface IDriverRepository
+    {
+        Task<Driver?> GetAsync(Guid id, CancellationToken ct = default);
+        Task UpsertAsync(Driver driver, CancellationToken ct = default);
+    }
+
+}
+</file>
+
+<file path="DriverService/DriverService.Application/Abstractions/IDriverService.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DriverService.Application.Abstractions
+{
+    public interface IDriverService
+    {
+        Task SetOnlineAsync(Guid id, bool online, CancellationToken ct = default);
+        Task UpdateLocationAsync(Guid id, double lat, double lng, CancellationToken ct = default);
+    }
+}
+</file>
+
+<file path="DriverService/DriverService.Application/Class1.cs">
+namespace DriverService.Application
+{
+    public class Class1
+    {
+
+    }
+}
+</file>
+
+<file path="DriverService/DriverService.Application/DriverService.Application.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DriverService.Domain\DriverService.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="DriverService/DriverService.Application/Services/DriverService.cs">
+using DriverService.Application.Abstractions;
+using DriverService.Domain.Domain;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DriverService.Application.Services
+{
+    public sealed class DriverService : IDriverService
+    {
+        private readonly IDriverRepository _repo;
+        public DriverService(IDriverRepository repo) => _repo = repo;
+
+        public async Task SetOnlineAsync(Guid id, bool online, CancellationToken ct = default)
+        {
+            var d = await _repo.GetAsync(id, ct) ?? new Driver { Id = id };
+            d.Online = online; d.UpdatedAt = DateTime.UtcNow;
+            await _repo.UpsertAsync(d, ct);
+        }
+
+        public async Task UpdateLocationAsync(Guid id, double lat, double lng, CancellationToken ct = default)
+        {
+            var d = await _repo.GetAsync(id, ct) ?? new Driver { Id = id };
+            d.Lat = lat; d.Lng = lng; d.UpdatedAt = DateTime.UtcNow;
+            await _repo.UpsertAsync(d, ct);
+        }
+    }
+}
+</file>
+
+<file path="DriverService/DriverService.Domain/DriverService.Domain.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
+</file>
+
+<file path="DriverService/DriverService.Domain/Entities/Driver.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DriverService.Domain.Domain
+{
+    public class Driver
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string FullName { get; set; } = string.Empty;
+        public bool Online { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
+}
+</file>
+
+<file path="DriverService/DriverService.Domain/ValueObjects/GeoPoint.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DriverService.Domain.ValueObjects
+{
+    public sealed record GeoPoint
+    {
+        private double _latitude;
+        private double _longitude;
+
+        public double Latitude
+        {
+            get => _latitude;
+            init
+            {
+                if (value < -90 || value > 90)
+                    throw new ArgumentOutOfRangeException(nameof(Latitude), "Latitude must be between -90 and 90 degrees.");
+                _latitude = value;
+            }
+        }
+
+        public double Longitude
+        {
+            get => _longitude;
+            init
+            {
+                if (value < -180 || value > 180)
+                    throw new ArgumentOutOfRangeException(nameof(Longitude), "Longitude must be between -180 and 180 degrees.");
+                _longitude = value;
+            }
+        }
+
+        public GeoPoint(double latitude, double longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+        }
+    }
+}
+</file>
+
+<file path="DriverService/DriverService.Infrastructure/Data/DriverDbContext.cs">
+using DriverService.Domain.Domain;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DriverService.Infrastructure.Data
+{
+    public class DriverDbContext : DbContext
+    {
+        public DriverDbContext(DbContextOptions<DriverDbContext> opt) : base(opt) { }
+
+        public DbSet<Driver> Drivers => Set<Driver>();
+
+        protected override void OnModelCreating(ModelBuilder b)
+        {
+            b.Entity<Driver>(e =>
+            {
+                e.HasKey(x => x.Id);
+                e.Property(x => x.FullName).HasMaxLength(150);
+                e.Property(x => x.Online);
+                e.Property(x => x.Lat);
+                e.Property(x => x.Lng);
+            });
+        }
+    }
+}
+</file>
+
+<file path="DriverService/DriverService.Infrastructure/DriverService.Infrastructure.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DriverService.Application\DriverService.Application.csproj" />
+    <ProjectReference Include="..\DriverService.Domain\DriverService.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="DriverService/DriverService.Infrastructure/Repositories/EfDriverRepository.cs">
+using DriverService.Application.Abstractions;
+using DriverService.Domain.Domain;
+using DriverService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DriverService.Infrastructure.Repositories
+{
+    public sealed class EfDriverRepository : IDriverRepository
+    {
+        private readonly DriverDbContext _db;
+        public EfDriverRepository(DriverDbContext db) => _db = db;
+
+        public Task<Driver?> GetAsync(Guid id, CancellationToken ct = default) =>
+            _db.Drivers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, ct);
+
+        public async Task UpsertAsync(Driver driver, CancellationToken ct = default)
+        {
+            var exist = await _db.Drivers.FirstOrDefaultAsync(x => x.Id == driver.Id, ct);
+            if (exist is null)
+                _db.Drivers.Add(driver);
+            else
+                _db.Entry(exist).CurrentValues.SetValues(driver);
+
+            await _db.SaveChangesAsync(ct);
+        }
+    }
+}
+</file>
+
+<file path="DriverService/DriverService.sln">
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Api", "DriverService.Api\DriverService.Api.csproj", "{744A0F5B-BB24-4446-B760-50ED1C96133E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Application", "DriverService.Application\DriverService.Application.csproj", "{F573D397-C45E-4D3E-ABC4-D016F5D775BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Domain", "DriverService.Domain\DriverService.Domain.csproj", "{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Infrastructure", "DriverService.Infrastructure\DriverService.Infrastructure.csproj", "{65292C7E-ACFF-4216-B78F-DED0DA81A645}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		Protos\driver.proto = Protos\driver.proto
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{744A0F5B-BB24-4446-B760-50ED1C96133E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744A0F5B-BB24-4446-B760-50ED1C96133E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744A0F5B-BB24-4446-B760-50ED1C96133E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744A0F5B-BB24-4446-B760-50ED1C96133E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F573D397-C45E-4D3E-ABC4-D016F5D775BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F573D397-C45E-4D3E-ABC4-D016F5D775BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F573D397-C45E-4D3E-ABC4-D016F5D775BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F573D397-C45E-4D3E-ABC4-D016F5D775BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58D2A7EB-1E5F-43D5-AFA1-7FF8097EB67C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65292C7E-ACFF-4216-B78F-DED0DA81A645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65292C7E-ACFF-4216-B78F-DED0DA81A645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65292C7E-ACFF-4216-B78F-DED0DA81A645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65292C7E-ACFF-4216-B78F-DED0DA81A645}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C9C4761-C651-42DC-BD3E-6CC79B5FA2D5}
+	EndGlobalSection
+EndGlobal
+</file>
+
+<file path="DriverService/Protos/driver.proto">
+syntax = "proto3";
+package driver;
+
+service DriverQuery {
+  rpc FindNearbyDrivers (NearbyRequest) returns (NearbyResponse);
+}
+
+message NearbyRequest {
+  double lat = 1;
+  double lng = 2;
+  double radiusKm = 3;
+}
+
+message DriverHit {
+  string driverId = 1;
+  double lat = 2;
+  double lng = 3;
+}
+
+message NearbyResponse {
+  repeated DriverHit drivers = 1;
+}
+</file>
+
+<file path="nginx_gateway/nginx.conf">
+# worker_processes auto;
+# events { worker_connections 1024; }
+
+# http {
+#   sendfile on;
+#   client_max_body_size 20m;
+
+#   upstream user_svc   { server user-service:8080; }
+#   upstream trip_svc   { server trip-service:8080; }
+#   upstream driver_svc { server driver-service:8080; }
+
+#   server {
+#     listen 80;
+
+#     location /api/auth/     { proxy_pass http://user_svc/; }
+#     location /api/users/    { proxy_pass http://user_svc/; }
+#     location /api/trips/    { proxy_pass http://trip_svc/; }
+#     location /api/drivers/  { proxy_pass http://driver_svc/; }
+
+#     location /health { return 200 "ok"; }
+#   }
+# }
+</file>
+
+<file path="nginx_gateway/Nginx.Dockerfile">
+FROM nginx:alpine
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+</file>
+
+<file path="TripService/TripService.Api/appsettings.Development.json">
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+</file>
+
+<file path="TripService/TripService.Api/appsettings.json">
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "Default": "Host=postgres-trip;Port=5432;Database=uitgo_trip;Username=postgres;Password=postgres"
+  }
+}
+</file>
+
+<file path="TripService/TripService.Api/Controllers/TripsController.cs">
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using TripService.Application.Abstractions;
+using TripService.Domain.Entities;
+
+namespace TripService.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TripsController : ControllerBase
+    {
+        private readonly ITripService _tripService;
+        public TripsController(ITripService svc) => _tripService = svc;
+
+        [HttpPost]
+        public Task<Trip> Create([FromBody] Trip trip, CancellationToken ct) => _tripService.CreateAsync(trip, ct);
+
+        [HttpGet("{id:guid}")]
+        public Task<Trip?> Get(Guid id, CancellationToken ct) => _tripService.GetAsync(id, ct);
+
+        [HttpPost("{id:guid}/cancel")]
+        public async Task<IActionResult> Cancel(Guid id, CancellationToken ct)
+        {
+            await _tripService.CancelAsync(id, ct);
+            return NoContent();
+        }
+
+    }
+}
+</file>
+
+<file path="TripService/TripService.Api/Program.cs">
+using Microsoft.EntityFrameworkCore;
+using TripService.Application.Abstractions;
+using TripService.Infrastructure.Data;
+using TripService.Infrastructure.Repositories;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ITripRepository, EfTripRepository>();
+builder.Services.AddScoped<ITripService, TripService.Application.Services.TripService>();
+var app = builder.Build();
+builder.Services.AddDbContext<TripDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+</file>
+
+<file path="TripService/TripService.Api/Properties/launchSettings.json">
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:25467",
+      "sslPort": 44383
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5047",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7010;http://localhost:5047",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+</file>
+
+<file path="TripService/TripService.Api/TripService.Api.csproj">
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.21" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TripService.Application\TripService.Application.csproj" />
+    <ProjectReference Include="..\TripService.Infrastructure\TripService.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="TripService/TripService.Api/TripService.Api.http">
+@TripService.Api_HostAddress = http://localhost:5047
+
+GET {{TripService.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+</file>
+
+<file path="TripService/TripService.Application/Abstractions/ITripRepository.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TripService.Domain.Entities;
+
+namespace TripService.Application.Abstractions
+{
+    public interface ITripRepository
+    {
+        Task<Trip?> GetAsync(Guid id, CancellationToken ct = default);
+        Task AddAsync(Trip trip, CancellationToken ct = default);
+        Task UpdateAsync(Trip trip, CancellationToken ct = default);
+    }
+}
+</file>
+
+<file path="TripService/TripService.Application/Abstractions/ITripService.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TripService.Domain.Entities;
+
+namespace TripService.Application.Abstractions
+{
+    public interface ITripService
+    {
+        Task<Trip> CreateAsync(Trip trip, CancellationToken ct = default);
+        Task<Trip?> GetAsync(Guid id, CancellationToken ct = default);
+        Task CancelAsync(Guid id, CancellationToken ct = default);
+    }
+}
+</file>
+
+<file path="TripService/TripService.Application/Services/TripService.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TripService.Application.Abstractions;
+using TripService.Domain.Entities;
+
+namespace TripService.Application.Services
+{
+    public sealed class TripService : ITripService
+    {
+        private readonly ITripRepository _repo;
+        public TripService(ITripRepository repo) => _repo = repo;
+
+        public async Task<Trip> CreateAsync(Trip trip, CancellationToken ct = default)
+        {
+            trip.Status = TripStatus.Searching; // demo: chuyển sang tìm tài xế
+            await _repo.AddAsync(trip, ct);
+            return trip;
+        }
+
+        public Task<Trip?> GetAsync(Guid id, CancellationToken ct = default) => _repo.GetAsync(id, ct);
+
+        public async Task CancelAsync(Guid id, CancellationToken ct = default)
+        {
+            var t = await _repo.GetAsync(id, ct) ?? throw new KeyNotFoundException();
+            t.Status = TripStatus.Canceled;
+            await _repo.UpdateAsync(t, ct);
+        }
+    }
+}
+</file>
+
+<file path="TripService/TripService.Application/TripService.Application.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TripService.Domain\TripService.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="TripService/TripService.Domain/Entities/Trip.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TripService.Domain.Entities
+{
+    public enum TripStatus { Pending, Searching, Accepted, InProgress, Completed, Canceled }
+
+    public class Trip
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid RiderId { get; set; }
+        public Guid? DriverId { get; set; }
+        public double StartLat { get; set; }
+        public double StartLng { get; set; }
+        public double EndLat { get; set; }
+        public double EndLng { get; set; }
+        public TripStatus Status { get; set; } = TripStatus.Pending;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    }
+}
+</file>
+
+<file path="TripService/TripService.Domain/TripService.Domain.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
+</file>
+
+<file path="TripService/TripService.Infrastructure/Data/TripDbContext.cs">
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TripService.Domain.Entities;
+
+namespace TripService.Infrastructure.Data
+{
+    public class TripDbContext : DbContext
+    {
+        public TripDbContext(DbContextOptions<TripDbContext> opt) : base(opt) { }
+        public DbSet<Trip> Trips { get; set; }
+        protected override void OnModelCreating(ModelBuilder b)
+        {
+            b.Entity<Trip>(e =>
+            {
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.RiderId).IsRequired();
+
+                e.Property(x => x.Status)
+                    .HasConversion<string>()
+                    .IsRequired();
+
+                // Phase 2 có thể refactor thành GeoPoint VO
+                e.Property(x => x.StartLat).IsRequired();
+                e.Property(x => x.StartLng).IsRequired();
+                e.Property(x => x.EndLat).IsRequired();
+                e.Property(x => x.EndLng).IsRequired();
+            });
+        }
+    }
+}
+</file>
+
+<file path="TripService/TripService.Infrastructure/Repositories/EfTripRepository.cs">
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TripService.Application.Abstractions;
+using TripService.Domain.Entities;
+using TripService.Infrastructure.Data;
+
+namespace TripService.Infrastructure.Repositories
+{
+    public sealed class EfTripRepository : ITripRepository
+    {
+        private readonly TripDbContext _db;
+
+        public EfTripRepository(TripDbContext db) => _db = db;
+
+        public async Task<Trip?> GetAsync(Guid id, CancellationToken ct = default)
+        {
+            return await _db.Trips
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
+        }
+
+        public async Task AddAsync(Trip trip, CancellationToken ct = default)
+        {
+            _db.Trips.Add(trip);
+            await _db.SaveChangesAsync(ct);
+        }
+
+        public async Task UpdateAsync(Trip trip, CancellationToken ct = default)
+        {
+            _db.Trips.Update(trip);
+            await _db.SaveChangesAsync(ct);
+        }
+    }
+}
+</file>
+
+<file path="TripService/TripService.Infrastructure/TripService.Infrastructure.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TripService.Application\TripService.Application.csproj" />
+    <ProjectReference Include="..\TripService.Domain\TripService.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="TripService/TripService.sln">
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripService.Api", "TripService.Api\TripService.Api.csproj", "{EB06143D-686E-46E8-AC22-748E5EC1A3E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripService.Infrastructure", "TripService.Infrastructure\TripService.Infrastructure.csproj", "{2A8B99F4-37B8-4A5E-B068-459BDA522EB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripService.Domain", "TripService.Domain\TripService.Domain.csproj", "{727B68CA-89FE-45BE-9EC6-DBC19838A17F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripService.Application", "TripService.Application\TripService.Application.csproj", "{C5EDE0C8-04B5-4355-9C0F-DA9AE9256F96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB06143D-686E-46E8-AC22-748E5EC1A3E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB06143D-686E-46E8-AC22-748E5EC1A3E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB06143D-686E-46E8-AC22-748E5EC1A3E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB06143D-686E-46E8-AC22-748E5EC1A3E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A8B99F4-37B8-4A5E-B068-459BDA522EB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A8B99F4-37B8-4A5E-B068-459BDA522EB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A8B99F4-37B8-4A5E-B068-459BDA522EB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A8B99F4-37B8-4A5E-B068-459BDA522EB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{727B68CA-89FE-45BE-9EC6-DBC19838A17F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{727B68CA-89FE-45BE-9EC6-DBC19838A17F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{727B68CA-89FE-45BE-9EC6-DBC19838A17F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{727B68CA-89FE-45BE-9EC6-DBC19838A17F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5EDE0C8-04B5-4355-9C0F-DA9AE9256F96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5EDE0C8-04B5-4355-9C0F-DA9AE9256F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5EDE0C8-04B5-4355-9C0F-DA9AE9256F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5EDE0C8-04B5-4355-9C0F-DA9AE9256F96}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BFF94CFB-2892-4EAB-B3FC-CE20F7456FDE}
+	EndGlobalSection
+EndGlobal
+</file>
+
+<file path="UserService/UserService.Api/appsettings.Development.json">
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+</file>
+
+<file path="UserService/UserService.Api/appsettings.json">
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "Jwt": {
+    "Secret": "UltimateSuperSecretKeyForJwtTokenGeneration123",
+    "Issuer": "UserService",
+    "Audience": "UserServiceClients",
+    "ExpirationInMinutes": 60
+  },
+  "ConnectionStrings": {
+    "Default": "Host=postgres-user;Port=5432;Database=uitgo_user;Username=postgres;Password=postgres"
+  }
+}
+</file>
+
+<file path="UserService/UserService.Api/Controllers/AuthController.cs">
+using Microsoft.AspNetCore.Mvc;
+using UserService.Application.Abstractions;
+using UserService.Application.Dtos;
+
+namespace UserService.Api.Controllers
+{
+    public class AuthController : ControllerBase
+    {
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService) => _authService = authService;
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto dto, CancellationToken ct)
+        {   
+            var u = await _authService.RegisterAsync(dto.Email, dto.Password, dto.FullName, ct);
+            return Ok(new { u.Id, u.Email, u.FullName });
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto dto, CancellationToken ct)
+        {
+            var token = await _authService.LoginAsync(dto.Email, dto.Password, ct);
+            return Ok(new { token });
+        }
+    }
+}
+</file>
+
+<file path="UserService/UserService.Api/Program.cs">
+using Microsoft.EntityFrameworkCore;
+using System;
+using UserService.Application.Abstractions;
+using UserService.Application.Services;
+using UserService.Infrastructure.Auth;
+using UserService.Infrastructure.Data;
+using UserService.Infrastructure.Repositories;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("Jwt")
+);
+builder.Services.AddDbContext<UserDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IUserRepository, EfUserRepository>();
+builder.Services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+</file>
+
+<file path="UserService/UserService.Api/Properties/launchSettings.json">
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:9651",
+      "sslPort": 44348
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5208",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7029;http://localhost:5208",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+</file>
+
+<file path="UserService/UserService.Api/UserService.Api.csproj">
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UserService.Application\UserService.Application.csproj" />
+    <ProjectReference Include="..\UserService.Domain\UserService.Domain.csproj" />
+    <ProjectReference Include="..\UserService.Infrastructure\UserService.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="UserService/UserService.Api/UserService.Api.http">
+@UserService.Api_HostAddress = http://localhost:5208
+
+GET {{UserService.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+</file>
+
+<file path="UserService/UserService.Application/Abstractions/IAuthService.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UserService.Domain.Entities;
+
+namespace UserService.Application.Abstractions
+{
+    public interface IAuthService
+    {
+        Task<User> RegisterAsync(string email, string password, string fullName, CancellationToken ct = default);
+        Task<string> LoginAsync(string email, string password, CancellationToken ct = default);
+    }
+}
+</file>
+
+<file path="UserService/UserService.Application/Abstractions/IJwtTokenProvider.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UserService.Application.Abstractions
+{
+    public interface IJwtTokenProvider
+    {
+        string CreateToken(string userId, string email);
+    }
+}
+</file>
+
+<file path="UserService/UserService.Application/Abstractions/IUserRepository.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UserService.Domain.Entities;
+
+namespace UserService.Application.Abstractions
+{
+    public interface IUserRepository
+    {
+        Task<User?> GetByEmailAsync(string email, CancellationToken ct = default);
+        Task AddAsync(User user, CancellationToken ct = default);
+    }
+}
+</file>
+
+<file path="UserService/UserService.Application/Dtos/LoginDto.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UserService.Application.Dtos
+{
+    public record LoginDto(string Email, string Password);
+}
+</file>
+
+<file path="UserService/UserService.Application/Dtos/RegisterDto.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UserService.Application.Dtos
+{
+    public record RegisterDto(string Email, string Password, string FullName);
+}
+</file>
+
+<file path="UserService/UserService.Application/Services/AuthService.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UserService.Application.Abstractions;
+using UserService.Domain.Entities;
+
+namespace UserService.Application.Services
+{
+    public class AuthService : IAuthService
+    {
+        private readonly IUserRepository _repo;
+        private readonly IJwtTokenProvider _jwt;
+
+        public AuthService(IUserRepository repo, IJwtTokenProvider jwt)
+        {
+            _repo = repo;
+            _jwt = jwt;
+        }
+
+        public async Task<User> RegisterAsync(string email, string password, string fullName, CancellationToken ct = default)
+        {
+            if (await _repo.GetByEmailAsync(email, ct) is not null)
+                throw new InvalidOperationException("Email already registered");
+
+            var hash = BCrypt.Net.BCrypt.HashPassword(password);
+            var user = new User { Email = email, PasswordHash = hash, FullName = fullName };
+            await _repo.AddAsync(user, ct);
+            return user;
+        }
+
+        public async Task<string> LoginAsync(string email, string password, CancellationToken ct = default)
+        {
+            var user = await _repo.GetByEmailAsync(email, ct) ?? throw new UnauthorizedAccessException("Invalid credentials");
+            if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                throw new UnauthorizedAccessException("Invalid credentials");
+
+            return _jwt.CreateToken(user.Id.ToString(), user.Email);
+        }
+    }
+}
+</file>
+
+<file path="UserService/UserService.Application/UserService.Application.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UserService.Domain\UserService.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="UserService/UserService.Domain/Entities/User.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UserService.Domain.Entities
+{
+    public class User
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Username { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    }
+}
+</file>
+
+<file path="UserService/UserService.Domain/UserService.Domain.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
+</file>
+
+<file path="UserService/UserService.Infrastructure/Auth/JwtSettings.cs">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UserService.Infrastructure.Auth
+{
+    public class JwtSettings
+    {
+        public string Secret { get; set; } = string.Empty;
+        public string Issuer { get; set; } = string.Empty;
+        public string Audience { get; set; } = string.Empty;
+        public int ExpiryMinutes { get; set; }
+    }
+}
+</file>
+
+<file path="UserService/UserService.Infrastructure/Auth/JwtTokenProvider.cs">
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using UserService.Application.Abstractions;
+
+namespace UserService.Infrastructure.Auth
+{
+    public class JwtTokenProvider : IJwtTokenProvider
+    {
+        private readonly string _secret;
+        public JwtTokenProvider(IOptions<JwtSettings> options) => _secret = options.Value.Secret ?? throw new("Missing Jwt:Secret");
+
+        public string CreateToken(string userId, string email)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var claims = new[] { new Claim("sub", userId), new Claim("email", email) };
+            var token = new JwtSecurityToken(claims: claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: creds);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+    }
+}
+</file>
+
+<file path="UserService/UserService.Infrastructure/Data/UserDbContext.cs">
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
+using UserService.Domain.Entities;
+
+namespace UserService.Infrastructure.Data
+{
+    public class UserDbContext : DbContext
+    {
+        public UserDbContext(DbContextOptions<UserDbContext> opt) : base(opt) { }
+        public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder b)
+        {
+            b.Entity<User>(e =>
+            {
+                e.HasIndex(x => x.Email).IsUnique();
+                e.Property(x => x.Username).HasMaxLength(320).IsRequired();
+                e.Property(x => x.PasswordHash).IsRequired();
+                e.Property(x => x.FullName).HasMaxLength(150);
+            });
+        }
+    }
+}
+</file>
+
+<file path="UserService/UserService.Infrastructure/Repositories/EfUserRepository.cs">
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UserService.Application.Abstractions;
+using UserService.Domain.Entities;
+using UserService.Infrastructure.Data;
+
+namespace UserService.Infrastructure.Repositories
+{
+    public sealed class EfUserRepository : IUserRepository
+    {
+        private readonly UserDbContext _db;
+        public EfUserRepository(UserDbContext db) => _db = db;
+
+        public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default)
+        {
+            return _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email, ct);
+        }
+
+        public async Task AddAsync(User user, CancellationToken ct = default)
+        {
+            _db.Users.Add(user);
+            await _db.SaveChangesAsync(ct);
+        }
+    }
+}
+</file>
+
+<file path="UserService/UserService.Infrastructure/UserService.Infrastructure.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.21" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UserService.Application\UserService.Application.csproj" />
+    <ProjectReference Include="..\UserService.Domain\UserService.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="UserService/UserService.sln">
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Api", "UserService.Api\UserService.Api.csproj", "{7353752D-6DEF-4847-82F1-027DD460F745}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Domain", "UserService.Domain\UserService.Domain.csproj", "{7057D391-F657-401D-8218-C5A5413CE1E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Infrastructure", "UserService.Infrastructure\UserService.Infrastructure.csproj", "{EDCF6A11-F0AA-4BF0-991C-A9D385BFC9A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Application", "UserService.Application\UserService.Application.csproj", "{B5872044-F672-46C1-B777-FB9A502D6C1A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7353752D-6DEF-4847-82F1-027DD460F745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7353752D-6DEF-4847-82F1-027DD460F745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7353752D-6DEF-4847-82F1-027DD460F745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7353752D-6DEF-4847-82F1-027DD460F745}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7057D391-F657-401D-8218-C5A5413CE1E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7057D391-F657-401D-8218-C5A5413CE1E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7057D391-F657-401D-8218-C5A5413CE1E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7057D391-F657-401D-8218-C5A5413CE1E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDCF6A11-F0AA-4BF0-991C-A9D385BFC9A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDCF6A11-F0AA-4BF0-991C-A9D385BFC9A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDCF6A11-F0AA-4BF0-991C-A9D385BFC9A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDCF6A11-F0AA-4BF0-991C-A9D385BFC9A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5872044-F672-46C1-B777-FB9A502D6C1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5872044-F672-46C1-B777-FB9A502D6C1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5872044-F672-46C1-B777-FB9A502D6C1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5872044-F672-46C1-B777-FB9A502D6C1A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0F0C31B9-E355-4B1D-A804-D93A3EE177EF}
+	EndGlobalSection
+EndGlobal
+</file>
+
+<file path=".gitignore">
+## Ignore Visual Studio temporary files, build results, and
+## files generated by popular Visual Studio add-ons.
+##
+## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.env
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Mono auto generated files
+mono_crash.*
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Aa][Rr][Mm]64[Ee][Cc]/
+bld/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+
+# Build results on 'Bin' directories
+**/[Bb]in/*
+# Uncomment if you have tasks that rely on *.refresh files to move binaries
+# (https://github.com/github/gitignore/pull/3736)
+#!**/[Bb]in/*.refresh
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+# Uncomment if you have tasks that create the project's static files in wwwroot
+#wwwroot/
+
+# Visual Studio 2017 auto generated files
+Generated\ Files/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Approval Tests result files
+*.received.*
+
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# Benchmark Results
+BenchmarkDotNet.Artifacts/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.idb
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+# but not Directory.Build.rsp, as it configures directory-level build defaults
+!Directory.Build.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Chutzpah Test files
+_Chutzpah*
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Visual Studio Trace Files
+*.e2e
+
+# TFS 2012 Local Workspace
+$tf/
+
+# Guidance Automation Toolkit
+*.gpState
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# TeamCity is a build add-in
+_TeamCity*
+
+# DotCover is a Code Coverage Tool
+*.dotCover
+
+# AxoCover is a Code Coverage Tool
+.axoCover/*
+!.axoCover/settings.json
+
+# Coverlet is a free, cross platform Code Coverage Tool
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# Visual Studio code coverage results
+*.coverage
+*.coveragexml
+
+# NCrunch
+_NCrunch_*
+.NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# MightyMoose
+*.mm.*
+AutoTest.Net/
+
+# Web workbench (sass)
+.sass-cache/
+
+# Installshield output folder
+[Ee]xpress/
+
+# DocProject is a documentation generator add-in
+DocProject/buildhelp/
+DocProject/Help/*.HxT
+DocProject/Help/*.HxC
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/Html2
+DocProject/Help/html
+
+# Click-Once directory
+publish/
+
+# Publish Web Output
+*.[Pp]ublish.xml
+*.azurePubxml
+# Note: Comment the next line if you want to checkin your web deploy settings,
+# but database connection strings (with potential passwords) will be unencrypted
+*.pubxml
+*.publishproj
+
+# Microsoft Azure Web App publish settings. Comment the next line if you want to
+# checkin your Azure Web App publish settings, but sensitive information contained
+# in these scripts will be unencrypted
+PublishScripts/
+
+# NuGet Packages
+*.nupkg
+# NuGet Symbol Packages
+*.snupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/[Pp]ackages/repositories.config
+# NuGet v3's project.json files produces more ignorable files
+*.nuget.props
+*.nuget.targets
+
+# Microsoft Azure Build Output
+csx/
+*.build.csdef
+
+# Microsoft Azure Emulator
+ecf/
+rcf/
+
+# Windows Store app package directories and files
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.appx
+*.appxbundle
+*.appxupload
+
+# Visual Studio cache files
+# files ending in .cache can be ignored
+*.[Cc]ache
+# but keep track of directories ending in .cache
+!?*.[Cc]ache/
+
+# Others
+ClientBin/
+~$*
+*~
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+
+# Including strong name files can present a security risk
+# (https://github.com/github/gitignore/pull/2483#issue-259490424)
+#*.snk
+
+# Since there are multiple workflows, uncomment next line to ignore bower_components
+# (https://github.com/github/gitignore/pull/1529#issuecomment-104372622)
+#bower_components/
+
+# RIA/Silverlight projects
+Generated_Code/
+
+# Backup & report files from converting an old project file
+# to a newer Visual Studio version. Backup files are not needed,
+# because we have git ;-)
+_UpgradeReport_Files/
+Backup*/
+UpgradeLog*.XML
+UpgradeLog*.htm
+ServiceFabricBackup/
+*.rptproj.bak
+
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+# Business Intelligence projects
+*.rdl.data
+*.bim.layout
+*.bim_*.settings
+*.rptproj.rsuser
+*- [Bb]ackup.rdl
+*- [Bb]ackup ([0-9]).rdl
+*- [Bb]ackup ([0-9][0-9]).rdl
+
+# Microsoft Fakes
+FakesAssemblies/
+
+# GhostDoc plugin setting file
+*.GhostDoc.xml
+
+# Node.js Tools for Visual Studio
+.ntvs_analysis.dat
+node_modules/
+
+# Visual Studio 6 build log
+*.plg
+
+# Visual Studio 6 workspace options file
+*.opt
+
+# Visual Studio 6 auto-generated workspace file (contains which files were open etc.)
+*.vbw
+
+# Visual Studio 6 auto-generated project file (contains which files were open etc.)
+*.vbp
+
+# Visual Studio 6 workspace and project file (working project files containing files to include in project)
+*.dsw
+*.dsp
+
+# Visual Studio 6 technical files
+*.ncb
+*.aps
+
+# Visual Studio LightSwitch build output
+**/*.HTMLClient/GeneratedArtifacts
+**/*.DesktopClient/GeneratedArtifacts
+**/*.DesktopClient/ModelManifest.xml
+**/*.Server/GeneratedArtifacts
+**/*.Server/ModelManifest.xml
+_Pvt_Extensions
+
+# Paket dependency manager
+**/.paket/paket.exe
+paket-files/
+
+# FAKE - F# Make
+**/.fake/
+
+# CodeRush personal settings
+**/.cr/personal
+
+# Python Tools for Visual Studio (PTVS)
+**/__pycache__/
+*.pyc
+
+# Cake - Uncomment if you are using it
+#tools/**
+#!tools/packages.config
+
+# Tabs Studio
+*.tss
+
+# Telerik's JustMock configuration file
+*.jmconfig
+
+# BizTalk build output
+*.btp.cs
+*.btm.cs
+*.odx.cs
+*.xsd.cs
+
+# OpenCover UI analysis results
+OpenCover/
+
+# Azure Stream Analytics local run output
+ASALocalRun/
+
+# MSBuild Binary and Structured Log
+*.binlog
+MSBuild_Logs/
+
+# AWS SAM Build and Temporary Artifacts folder
+.aws-sam
+
+# NVidia Nsight GPU debugger configuration file
+*.nvuser
+
+# MFractors (Xamarin productivity tool) working folder
+**/.mfractor/
+
+# Local History for Visual Studio
+**/.localhistory/
+
+# Visual Studio History (VSHistory) files
+.vshistory/
+
+# BeatPulse healthcheck temp database
+healthchecksdb
+
+# Backup folder for Package Reference Convert tool in Visual Studio 2017
+MigrationBackup/
+
+# Ionide (cross platform F# VS Code tools) working folder
+**/.ionide/
+
+# Fody - auto-generated XML schema
+FodyWeavers.xsd
+
+# VS Code files for those working on multiple tools
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# Windows Installer files from build outputs
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+</file>
+
+<file path="LICENSE">
+MIT License
+
+Copyright (c) 2025 Straight Forward - Helios - NHOANGHIEN
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</file>
+
+<file path="README.md">
+# uit-go
+</file>
+
+</files>
