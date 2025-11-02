@@ -4,6 +4,8 @@ using UserService.Application.Dtos;
 
 namespace UserService.Api.Controllers
 {
+    [ApiController]
+    [Route("api/users")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -11,7 +13,7 @@ namespace UserService.Api.Controllers
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto, CancellationToken ct)
-        {   
+        {
             var u = await _authService.RegisterAsync(dto.Email, dto.Password, dto.FullName, ct);
             return Ok(new { u.Id, u.Email, u.FullName });
         }
@@ -22,5 +24,8 @@ namespace UserService.Api.Controllers
             var token = await _authService.LoginAsync(dto.Email, dto.Password, ct);
             return Ok(new { token });
         }
+
+        [HttpGet("health")]
+        public IActionResult Health() => Ok("user ok");
     }
 }

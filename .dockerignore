@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/.git/
+**/.vs/
+**/node_modules/
+**/*.user
+**/*.suo
+**/*.csproj.user
+**/Properties/launchSettings.json
+.env

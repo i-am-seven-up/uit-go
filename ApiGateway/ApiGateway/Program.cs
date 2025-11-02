@@ -8,6 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+builder.Services.AddHealthChecks(); 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 var app = builder.Build();
@@ -19,10 +20,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+/*app.UseHttpsRedirection();*/
 
 app.UseAuthorization();
 
+app.MapReverseProxy();
+
 app.MapControllers();
+
+app.MapHealthChecks("/health");
 
 app.Run();

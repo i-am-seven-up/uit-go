@@ -11,8 +11,8 @@ namespace TripService.Domain.Entities
     public class Trip
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid RiderId { get; set; }
-        public Guid? DriverId { get; set; }
+        public Guid PassengerId { get; set; }
+        public Guid? AssignedDriverId { get; set; }
         public double StartLat { get; set; }
         public double StartLng { get; set; }
         public double EndLat { get; set; }

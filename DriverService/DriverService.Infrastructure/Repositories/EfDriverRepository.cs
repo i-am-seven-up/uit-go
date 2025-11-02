@@ -15,10 +15,10 @@ namespace DriverService.Infrastructure.Repositories
         private readonly DriverDbContext _db;
         public EfDriverRepository(DriverDbContext db) => _db = db;
 
-        public Task<Driver?> GetAsync(Guid id, CancellationToken ct = default) =>
+        public Task<DriverService.Domain.Domain.Driver?> GetAsync(Guid id, CancellationToken ct = default) =>
             _db.Drivers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, ct);
 
-        public async Task UpsertAsync(Driver driver, CancellationToken ct = default)
+        public async Task UpsertAsync(DriverService.Domain.Domain.Driver driver, CancellationToken ct = default)
         {
             var exist = await _db.Drivers.FirstOrDefaultAsync(x => x.Id == driver.Id, ct);
             if (exist is null)

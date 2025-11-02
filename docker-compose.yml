@@ -6,7 +6,8 @@ services:
     ports: ["5001:8080"]
     environment:
       - ConnectionStrings__Default=Host=postgres-user;Port=5432;Database=uitgo_user;Username=postgres;Password=postgres
-      - Jwt__Secret=PLEASE_CHANGE_THIS_DEMO_SECRET
+      - ConnectionStrings__Redis=uit-go-redis:6379
+      - Jwt__Secret=UltimateSuperSecretKeyForJwtTokenGeneration123
     depends_on: [postgres-user]
 
   driver-service:
@@ -16,6 +17,7 @@ services:
     ports: ["5003:8080"]
     environment:
       - ConnectionStrings__Default=Host=postgres-driver;Port=5432;Database=uitgo_driver;Username=postgres;Password=postgres
+      - ConnectionStrings__Redis=uit-go-redis:6379
     depends_on: [postgres-driver]
     
   trip-service:
@@ -25,6 +27,7 @@ services:
     ports: ["5002:8080"]
     environment:
       - ConnectionStrings__Default=Host=postgres-trip;Port=5432;Database=uitgo_trip;Username=postgres;Password=postgres
+      - ConnectionStrings__Redis=uit-go-redis:6379
     depends_on: [postgres-trip, driver-service]
 
   
@@ -33,7 +36,7 @@ services:
     build:
       context: .
       dockerfile: ./deploy/docker/ApiGateway.Dockerfile
-    ports: ["8080:80"]
+    ports: ["8080:8080"]
     depends_on: [user-service, trip-service, driver-service]
 
 
@@ -77,8 +80,18 @@ services:
       - "5435:5432"
     volumes:
       - pg_driver:/var/lib/postgresql/data
+  
+  uit-go-redis:
+    image: redis:7-alpine
+    command: ["redis-server","--appendonly","yes"]
+    ports: ["6379:6379"]
+    volumes: [ "redis-data:/data" ]
 
 volumes:
   pg_user: {}
   pg_trip: {}
   pg_driver: {}
+  redis-data: {}
+
+
+
