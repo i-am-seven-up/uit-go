@@ -21,22 +21,26 @@ namespace DriverService.Api.Controllers
 
         }
 
-        [HttpPost("{driverId}/location")]
-        public async Task<IActionResult> UpdateLocation(Guid driverId, [FromBody] UpdateLocationDto dto)
+        // Bật online kèm tọa độ ban đầu
+        [HttpPost("{id:guid}/online")]
+        public async Task<IActionResult> SetOnline(Guid id, [FromBody] SetOnlineRequest req, CancellationToken ct)
         {
-            await _driverSvc.UpdateLocationAsync(driverId, dto.Lat, dto.Lng);
-            return Ok();
+            // lưu lat/lng vào DB và Redis
+            await _driverSvc.UpdateLocationAsync(id, req.Lat, req.Lng, ct);
+            await _driverSvc.SetOnlineAsync(id, true, ct);
+            return Ok(new { id, online = true });
         }
 
-        [HttpPost("{driverId}/online")]
-        public async Task<IActionResult> SetOnline(Guid driverId, [FromBody] SetOnlineDto dto)
+        // Cập nhật vị trí (tài xế đang online)
+        [HttpPost("{id:guid}/location")]
+        public async Task<IActionResult> UpdateLocation(Guid id, [FromBody] UpdateLocationRequest req, CancellationToken ct)
         {
-            await _driverSvc.SetOnlineAsync(driverId, dto.Online);
-            return Ok();
+            await _driverSvc.UpdateLocationAsync(id, req.Lat, req.Lng, ct);
+            return Ok(new { id, updated = true });
         }
 
         [HttpPost("{driverId}/trip-finished")]
-        public async Task<IActionResult> TripFinished(string driverId)
+        public async Task<IActionResult> TripFinished(Guid driverId)
         {
             var dbRedis = _redis.GetDatabase();
 
@@ -63,4 +67,14 @@ namespace DriverService.Api.Controllers
     public record UpdateLocationDto(double Lat, double Lng);
     public record SetOnlineDto(bool Online);
 
+    public sealed class SetOnlineRequest
+    {
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+    }
+    public sealed class UpdateLocationRequest
+    {
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+    }
 }

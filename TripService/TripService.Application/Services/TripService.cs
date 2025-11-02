@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Messaging.Contracts.Common;
+using Messaging.Contracts.Routing;
+using Messaging.Contracts.Trips;
+using Messaging.RabbitMQ.Abstractions;
 using TripService.Application.Abstractions;
 using TripService.Domain.Entities;
 
@@ -11,61 +10,58 @@ namespace TripService.Application.Services
     public sealed class TripService : ITripService
     {
         private readonly ITripRepository _repo;
+        private readonly IEventPublisher _bus;
+
         private readonly TripMatchService _match;
-    
-        public TripService(ITripRepository repo, TripMatchService match)
+
+        public TripService(ITripRepository repo, IEventPublisher bus, TripMatchService match)
         {
             _repo = repo;
-            _match = match;
+            _bus = bus;
+            _match = match; 
         }
 
         public async Task<Trip> CreateAsync(Trip trip, CancellationToken ct = default)
         {
-            // B1: trạng thái ban đầu
             trip.Status = TripStatus.Searching;
             await _repo.AddAsync(trip, ct);
 
-            // B2: tìm tài xế gần nhất trong 3km
+            var createdEvt = new TripCreated(
+                TripId: trip.Id,
+                PassengerId: trip.PassengerId,         
+                Start: new GeoPoint(trip.StartLat, trip.StartLng),
+                End: new GeoPoint(trip.EndLat, trip.EndLng),
+                CreatedAtUtc: DateTime.UtcNow
+            );
+            await _bus.PublishAsync(Routing.Keys.TripCreated, createdEvt, ct);
+
             var candidate = await _match.FindBestDriverAsync(
                 lat: trip.StartLat,
                 lng: trip.StartLng,
-                radiusKm: 3.0,
+                radiusKm: 20.0,
                 take: 10
             );
+            if (candidate is null) return trip;
 
-            if (candidate is null)
-            {
-                // chưa có driver phù hợp -> vẫn Searching
-                return trip;
-            }
-
-            // B3: khoá trip để tránh 2 thread assign cùng lúc
             var locked = await _match.TryLockTripAsync(trip.Id, TimeSpan.FromSeconds(5));
-            if (!locked)
-            {
-                // race condition -> trả về trip vẫn Searching
-                return trip;
-            }
+            if (!locked) return trip;
 
-            // B4: thông báo cho DriverService là tài xế này đã được assign trip này
-            // => DriverService sẽ set available = 0
             var marked = await _match.MarkDriverAssignedAsync(
                 driverId: candidate.DriverId.ToString(),
                 tripId: trip.Id
             );
+            if (!marked) return trip;
 
-            if (!marked)
-            {
-                // nếu vì lý do gì đó driver-service từ chối gán (VD driver vừa bận)
-                // thì ta không set AssignedDriverId, trip vẫn Searching
-                return trip;
-            }
-
-            // B5: cập nhật trip -> driver được gán chính thức
             trip.AssignedDriverId = candidate.DriverId;
             trip.Status = TripStatus.Accepted;
-
             await _repo.UpdateAsync(trip, ct);
+
+            var assignedEvt = new TripAssigned(
+                TripId: trip.Id,
+                DriverId: candidate.DriverId,
+                AssignedAtUtc: DateTime.UtcNow
+            );
+            await _bus.PublishAsync(Routing.Keys.TripAssigned, assignedEvt, ct);
 
             return trip;
         }

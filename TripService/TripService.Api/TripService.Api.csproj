@@ -26,6 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Message\Messaging.Contracts\Messaging.Contracts.csproj" />
+    <ProjectReference Include="..\..\Message\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
     <ProjectReference Include="..\TripService.Application\TripService.Application.csproj" />
     <ProjectReference Include="..\TripService.Infrastructure\TripService.Infrastructure.csproj" />
   </ItemGroup>

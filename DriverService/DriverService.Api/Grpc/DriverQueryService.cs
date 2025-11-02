@@ -46,9 +46,9 @@ namespace DriverService.Api.Grpc
 
             // đánh dấu tài xế bận
             await db.HashSetAsync(key, new HashEntry[] {
-            new HashEntry("available", "0"),
-            new HashEntry("current_trip_id", request.TripId)
-        });
+                new HashEntry("available", "0"),
+                new HashEntry("current_trip_id", request.TripId)
+            });
 
             return new MarkTripAssignedResponse { Success = true };
         }

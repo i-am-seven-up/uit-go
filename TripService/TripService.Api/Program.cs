@@ -4,6 +4,8 @@ using TripService.Application.Abstractions;
 using TripService.Application.Services;
 using TripService.Infrastructure.Data;
 using TripService.Infrastructure.Repositories;
+using Messaging.RabbitMQ;
+using Messaging.Contracts.Routing;
 
 using Driver;
 
@@ -28,6 +30,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ITripRepository, EfTripRepository>();
 builder.Services.AddScoped<ITripService, TripService.Application.Services.TripService>();
+
+builder.Services.AddRabbitMqEventBus(builder.Configuration, Routing.Exchange);
 builder.Services.AddScoped<TripMatchService>();
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis"))

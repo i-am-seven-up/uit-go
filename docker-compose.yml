@@ -2,60 +2,99 @@ services:
   user-service:
     build:
       context: .
-      dockerfile: ./deploy/docker/UserService.Dockerfile   
+      dockerfile: ./deploy/docker/UserService.Dockerfile
     ports: ["5001:8080"]
     environment:
+      # Postgres
       - ConnectionStrings__Default=Host=postgres-user;Port=5432;Database=uitgo_user;Username=postgres;Password=postgres
+      # Redis
       - ConnectionStrings__Redis=uit-go-redis:6379
+      # JWT (giữ giá trị "mạnh" hơn từ file 2)
       - Jwt__Secret=UltimateSuperSecretKeyForJwtTokenGeneration123
-    depends_on: [postgres-user]
+      # RabbitMQ
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      postgres-user:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      uit-go-redis:
+        condition: service_started
 
   driver-service:
     build:
       context: .
-      dockerfile: ./deploy/docker/DriverService.Dockerfile 
+      dockerfile: ./deploy/docker/DriverService.Dockerfile
     ports: ["5003:8080"]
     environment:
+      # Postgres
       - ConnectionStrings__Default=Host=postgres-driver;Port=5432;Database=uitgo_driver;Username=postgres;Password=postgres
+      # Redis
       - ConnectionStrings__Redis=uit-go-redis:6379
-    depends_on: [postgres-driver]
-    
+      # RabbitMQ
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      postgres-driver:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      uit-go-redis:
+        condition: service_started
+
   trip-service:
     build:
       context: .
-      dockerfile: ./deploy/docker/TripService.Dockerfile   
+      dockerfile: ./deploy/docker/TripService.Dockerfile
     ports: ["5002:8080"]
     environment:
+      # Postgres
       - ConnectionStrings__Default=Host=postgres-trip;Port=5432;Database=uitgo_trip;Username=postgres;Password=postgres
+      # Redis
       - ConnectionStrings__Redis=uit-go-redis:6379
-    depends_on: [postgres-trip, driver-service]
-
-  
+      # RabbitMQ
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      postgres-trip:
+        condition: service_started
+      driver-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      uit-go-redis:
+        condition: service_started
 
   api-gateway:
     build:
       context: .
       dockerfile: ./deploy/docker/ApiGateway.Dockerfile
+    # Nếu container gateway lắng nghe cổng 80 bên trong, giữ 8080:80 (mặc định Nginx)
     ports: ["8080:8080"]
-    depends_on: [user-service, trip-service, driver-service]
+    # Nếu gateway của bạn lắng nghe 8080 bên trong, đổi thành: ports: ["8080:8080"]
+    depends_on:
+      user-service:
+        condition: service_started
+      trip-service:
+        condition: service_started
+      driver-service:
+        condition: service_started
 
-
-  # gateway:
-  #   build:
-  #     context: ./gateway
-  #     dockerfile: ./Nginx.Dockerfile  
-  #   ports: ["8080:80"]
-  #   depends_on: [user-service, trip-service, driver-service]
-
-
+  # postgres
   postgres-user:
     image: postgres:16
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: uitgo_user
-    ports:
-      - "5433:5432"
+    ports: ["5433:5432"]
     volumes:
       - pg_user:/var/lib/postgresql/data
 
@@ -65,8 +104,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: uitgo_trip
-    ports:
-      - "5434:5432"
+    ports: ["5434:5432"]
     volumes:
       - pg_trip:/var/lib/postgresql/data
 
@@ -76,22 +114,37 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: uitgo_driver
-    ports:
-      - "5435:5432"
+    ports: ["5435:5432"]
     volumes:
       - pg_driver:/var/lib/postgresql/data
-  
+
+  # redis
   uit-go-redis:
     image: redis:7-alpine
     command: ["redis-server","--appendonly","yes"]
     ports: ["6379:6379"]
-    volumes: [ "redis-data:/data" ]
+    volumes:
+      - redis-data:/data
+
+  # rabbitmq
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      # RABBITMQ_DEFAULT_VHOST: /uitgo-dev   # (tùy chọn) nếu muốn dùng vhost riêng → nhớ set RabbitMQ__VirtualHost ở các service
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pg_user: {}
   pg_trip: {}
   pg_driver: {}
   redis-data: {}
-
-
-
