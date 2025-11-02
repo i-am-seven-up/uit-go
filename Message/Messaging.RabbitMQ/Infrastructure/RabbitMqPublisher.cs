@@ -39,12 +39,13 @@ namespace Messaging.RabbitMQ.Infrastructure
 
         public Task PublishAsync<T>(string routingKey, T payload, CancellationToken ct = default)
         {
-            var json = JsonSerializer.Serialize(payload);
+            // Dùng cùng options như consumer (camelCase, ignore null)
+            var json = JsonSerializer.Serialize(payload, JsonSerializerSettings.Default);
             var body = Encoding.UTF8.GetBytes(json);
 
             var props = _ch.CreateBasicProperties();
             props.ContentType = "application/json";
-            props.DeliveryMode = 2; // persistent
+            props.DeliveryMode = 2;
 
             _ch.BasicPublish(exchange: _exchangeName, routingKey: routingKey, basicProperties: props, body: body);
             return Task.CompletedTask;

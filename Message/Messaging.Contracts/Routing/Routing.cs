@@ -13,6 +13,8 @@ namespace Messaging.Contracts.Routing
         public static class Keys
         {
             // Trips
+            public const string TripCreated  = "trip.created";  
+            public const string TripAssigned = "trip.assigned";
             public const string TripRequested = "trip.requested";
             public const string TripCanceled = "trip.canceled";
             public const string TripAccepted = "trip.accepted"; 
@@ -20,6 +22,7 @@ namespace Messaging.Contracts.Routing
             // Drivers
             public const string DriverStatusChanged = "driver.status.changed";
             public const string DriverLocationUpdated = "driver.location.updated";
+            public const string DriverAssignedToTrip  = "driver.assignedToTrip";
         }
     }
 

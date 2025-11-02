@@ -19,13 +19,17 @@ namespace DriverService.Application.Services
             var d = await _repo.GetAsync(id, ct) ?? new Domain.Domain.Driver { Id = id };
             d.Online = online;
             d.UpdatedAt = DateTime.UtcNow;
-
             await _repo.UpsertAsync(d, ct);
 
-            // cập nhật Redis trạng thái online/offline
-            // online=true => online=1, false => online=0
-            await _locationSvc.UpdateLocationAsync(id, d.Lat, d.Lng);
-            // nếu offline thì có thể future: remove khỏi GEO, nhưng để đơn giản phase này cứ giữ nguyên
+            if (online)
+            {
+                // Lấy tên + toạ độ hiện có trong DB để seed vào Redis
+                await _locationSvc.SetOnlineAsync(id, d.FullName ?? "", d.Lat, d.Lng);
+            }
+            else
+            {
+                await _locationSvc.SetOfflineAsync(id);
+            }
         }
 
         public async Task UpdateLocationAsync(Guid id, double lat, double lng, CancellationToken ct = default)
