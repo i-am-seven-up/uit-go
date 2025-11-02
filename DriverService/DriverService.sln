@@ -11,10 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Domain", "Dri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverService.Infrastructure", "DriverService.Infrastructure\DriverService.Infrastructure.csproj", "{65292C7E-ACFF-4216-B78F-DED0DA81A645}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		Protos\driver.proto = Protos\driver.proto
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "..\Shared\Shared\Shared.csproj", "{626B1D52-BBD1-11BC-B02F-BAA61CE5EAB1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging.Contracts", "..\Message\Messaging.Contracts\Messaging.Contracts.csproj", "{503D8180-4654-67C6-CE04-ED791911EB88}"
 EndProject
@@ -50,6 +47,10 @@ Global
 		{4778618A-EE5D-E2BD-91B6-A83B5604CAEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4778618A-EE5D-E2BD-91B6-A83B5604CAEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4778618A-EE5D-E2BD-91B6-A83B5604CAEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{626B1D52-BBD1-11BC-B02F-BAA61CE5EAB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{626B1D52-BBD1-11BC-B02F-BAA61CE5EAB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{626B1D52-BBD1-11BC-B02F-BAA61CE5EAB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{626B1D52-BBD1-11BC-B02F-BAA61CE5EAB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

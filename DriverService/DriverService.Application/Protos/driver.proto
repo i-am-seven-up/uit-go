@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package driver;
+
+service DriverQuery {
+  rpc GetDriverInfo (GetDriverInfoRequest) returns (GetDriverInfoResponse);
+  rpc MarkTripAssigned (MarkTripAssignedRequest) returns (MarkTripAssignedResponse);
+}
+
+message GetDriverInfoRequest {
+  string driverId = 1;
+}
+
+message GetDriverInfoResponse {
+  string driverId = 1;
+  string name = 2;
+  double lat = 3;
+  double lng = 4;
+  bool available = 5;
+}
+
+message MarkTripAssignedRequest {
+  string driverId = 1;
+  string tripId = 2;
+}
+
+message MarkTripAssignedResponse {
+  bool success = 1;
+}

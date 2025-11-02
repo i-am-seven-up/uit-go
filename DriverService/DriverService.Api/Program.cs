@@ -1,4 +1,5 @@
 using DriverService.Api.Messaging;
+﻿using DriverService.Api.Grpc;
 using DriverService.Application.Abstractions;
 using DriverService.Application.Services;
 using DriverService.Infrastructure.Data;
@@ -6,12 +7,16 @@ using DriverService.Infrastructure.Repositories;
 using Messaging.Contracts.Routing;
 using Messaging.RabbitMQ;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
+
+AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddGrpc();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -23,6 +28,11 @@ builder.Services.AddScoped<IDriverService, DriverService.Application.Services.Dr
 
 builder.Services.AddRabbitMqEventBus(builder.Configuration, Routing.Exchange);
 builder.Services.AddHostedService<TripRequestedConsumer>();
+builder.Services.AddScoped<DriverLocationService>(); 
+builder.Services.AddSingleton<IConnectionMultiplexer>(
+    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis"))
+);
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -38,5 +48,16 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGrpcService<DriverQueryService>(); 
+
+app.MapHealthChecks("/health");
+
+// auto-migrate DB mỗi lần start
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DriverDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();

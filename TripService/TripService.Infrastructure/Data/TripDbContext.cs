@@ -18,7 +18,7 @@ namespace TripService.Infrastructure.Data
             {
                 e.HasKey(x => x.Id);
 
-                e.Property(x => x.RiderId).IsRequired();
+                e.Property(x => x.PassengerId).IsRequired();
 
                 e.Property(x => x.Status)
                     .HasConversion<string>()

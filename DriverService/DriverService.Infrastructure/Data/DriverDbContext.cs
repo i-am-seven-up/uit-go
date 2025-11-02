@@ -1,11 +1,5 @@
-﻿using DriverService.Domain.Domain;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+
 
 namespace DriverService.Infrastructure.Data
 {
@@ -13,11 +7,11 @@ namespace DriverService.Infrastructure.Data
     {
         public DriverDbContext(DbContextOptions<DriverDbContext> opt) : base(opt) { }
 
-        public DbSet<Driver> Drivers => Set<Driver>();
+        public DbSet<DriverService.Domain.Domain.Driver> Drivers => Set<DriverService.Domain.Domain.Driver>();
 
         protected override void OnModelCreating(ModelBuilder b)
         {
-            b.Entity<Driver>(e =>
+            b.Entity<DriverService.Domain.Domain.Driver>(e =>
             {
                 e.HasKey(x => x.Id);
                 e.Property(x => x.FullName).HasMaxLength(150);
