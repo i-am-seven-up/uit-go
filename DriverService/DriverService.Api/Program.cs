@@ -1,7 +1,10 @@
+using DriverService.Api.Messaging;
 using DriverService.Application.Abstractions;
 using DriverService.Application.Services;
 using DriverService.Infrastructure.Data;
 using DriverService.Infrastructure.Repositories;
+using Messaging.Contracts.Routing;
+using Messaging.RabbitMQ;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,10 @@ builder.Services.AddDbContext<DriverDbContext>(opt =>
 
 builder.Services.AddScoped<IDriverRepository, EfDriverRepository>();
 builder.Services.AddScoped<IDriverService, DriverService.Application.Services.DriverService>();
+
+builder.Services.AddRabbitMqEventBus(builder.Configuration, Routing.Exchange);
+builder.Services.AddHostedService<TripRequestedConsumer>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

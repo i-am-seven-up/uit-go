@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using TripService.Application.Abstractions;
 using TripService.Infrastructure.Data;
 using TripService.Infrastructure.Repositories;
+using Messaging.RabbitMQ;
+using Messaging.Contracts.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ITripRepository, EfTripRepository>();
 builder.Services.AddScoped<ITripService, TripService.Application.Services.TripService>();
+
+builder.Services.AddRabbitMqEventBus(builder.Configuration, Routing.Exchange);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Message\Messaging.Contracts\Messaging.Contracts.csproj" />
+    <ProjectReference Include="..\..\Message\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
     <ProjectReference Include="..\TripService.Domain\TripService.Domain.csproj" />
   </ItemGroup>
 

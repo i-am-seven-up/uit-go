@@ -2,48 +2,79 @@ services:
   user-service:
     build:
       context: .
-      dockerfile: ./deploy/docker/UserService.Dockerfile   
+      dockerfile: ./deploy/docker/UserService.Dockerfile
     ports: ["5001:8080"]
     environment:
       - ConnectionStrings__Default=Host=postgres-user;Port=5432;Database=uitgo_user;Username=postgres;Password=postgres
       - Jwt__Secret=PLEASE_CHANGE_THIS_DEMO_SECRET
-    depends_on: [postgres-user]
+      # >>> RabbitMQ
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      postgres-user:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
   driver-service:
     build:
       context: .
-      dockerfile: ./deploy/docker/DriverService.Dockerfile 
+      dockerfile: ./deploy/docker/DriverService.Dockerfile
     ports: ["5003:8080"]
     environment:
       - ConnectionStrings__Default=Host=postgres-driver;Port=5432;Database=uitgo_driver;Username=postgres;Password=postgres
-    depends_on: [postgres-driver]
-    
+      # >>> RabbitMQ
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      postgres-driver:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+
   trip-service:
     build:
       context: .
-      dockerfile: ./deploy/docker/TripService.Dockerfile   
+      dockerfile: ./deploy/docker/TripService.Dockerfile
     ports: ["5002:8080"]
     environment:
       - ConnectionStrings__Default=Host=postgres-trip;Port=5432;Database=uitgo_trip;Username=postgres;Password=postgres
-    depends_on: [postgres-trip, driver-service]
-
-  
+      # >>> RabbitMQ
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      postgres-trip:
+        condition: service_started
+      driver-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
   api-gateway:
     build:
       context: .
       dockerfile: ./deploy/docker/ApiGateway.Dockerfile
     ports: ["8080:80"]
-    depends_on: [user-service, trip-service, driver-service]
-
+    depends_on:
+      user-service:
+        condition: service_started
+      trip-service:
+        condition: service_started
+      driver-service:
+        condition: service_started
 
   # gateway:
   #   build:
   #     context: ./gateway
-  #     dockerfile: ./Nginx.Dockerfile  
+  #     dockerfile: ./Nginx.Dockerfile
   #   ports: ["8080:80"]
   #   depends_on: [user-service, trip-service, driver-service]
-
 
   postgres-user:
     image: postgres:16
@@ -77,6 +108,21 @@ services:
       - "5435:5432"
     volumes:
       - pg_driver:/var/lib/postgresql/data
+      
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     
+      - "15672:15672"   
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pg_user: {}
