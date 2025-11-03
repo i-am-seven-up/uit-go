@@ -1,13 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Driver;
+using Messaging.Contracts.Routing;
+using Messaging.RabbitMQ;
+using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using TripService.Api.Messaging;
 using TripService.Application.Abstractions;
+using TripService.Application.Offers;
 using TripService.Application.Services;
 using TripService.Infrastructure.Data;
 using TripService.Infrastructure.Repositories;
-using Messaging.RabbitMQ;
-using Messaging.Contracts.Routing;
-
-using Driver;
 
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
@@ -36,6 +37,12 @@ builder.Services.AddScoped<TripMatchService>();
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis"))
 );
+
+builder.Services.AddScoped<IOfferStore, RedisOfferStore>();
+
+builder.Services.AddHostedService<TripOfferDeclinedConsumer>();
+builder.Services.AddHostedService<TripOfferedConsumer>();
+
 builder.Services.AddGrpcClient<DriverQuery.DriverQueryClient>(o =>
 {
     // khớp với service name "driver-service" trong docker-compose

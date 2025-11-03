@@ -18,6 +18,8 @@ namespace Messaging.Contracts.Routing
             public const string TripRequested = "trip.requested";
             public const string TripCanceled = "trip.canceled";
             public const string TripAccepted = "trip.accepted"; 
+            public const string TripOffered = "trip.offered";
+            public const string TripOfferDeclined = "trip.offer.declined";
 
             // Drivers
             public const string DriverStatusChanged = "driver.status.changed";

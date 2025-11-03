@@ -10,15 +10,13 @@ namespace TripService.Application.Services
     public sealed class TripService : ITripService
     {
         private readonly ITripRepository _repo;
+        private readonly TripMatchService _match;
+        private readonly IOfferStore _offers;
         private readonly IEventPublisher _bus;
 
-        private readonly TripMatchService _match;
-
-        public TripService(ITripRepository repo, IEventPublisher bus, TripMatchService match)
+        public TripService(ITripRepository repo, TripMatchService match, IOfferStore offers, IEventPublisher bus)
         {
-            _repo = repo;
-            _bus = bus;
-            _match = match; 
+            _repo = repo; _match = match; _offers = offers; _bus = bus;
         }
 
         public async Task<Trip> CreateAsync(Trip trip, CancellationToken ct = default)
@@ -28,7 +26,7 @@ namespace TripService.Application.Services
 
             var createdEvt = new TripCreated(
                 TripId: trip.Id,
-                PassengerId: trip.PassengerId,         
+                PassengerId: trip.PassengerId,
                 Start: new GeoPoint(trip.StartLat, trip.StartLng),
                 End: new GeoPoint(trip.EndLat, trip.EndLng),
                 CreatedAtUtc: DateTime.UtcNow
@@ -36,32 +34,32 @@ namespace TripService.Application.Services
             await _bus.PublishAsync(Routing.Keys.TripCreated, createdEvt, ct);
 
             var candidate = await _match.FindBestDriverAsync(
-                lat: trip.StartLat,
-                lng: trip.StartLng,
-                radiusKm: 20.0,
-                take: 10
-            );
+                lat: trip.StartLat, lng: trip.StartLng, radiusKm: 20.0, take: 10);
             if (candidate is null) return trip;
 
-            var locked = await _match.TryLockTripAsync(trip.Id, TimeSpan.FromSeconds(15));
+            const int offerWindowSeconds = 15;   // thời gian tài xế được phép decline
+            const int safetySeconds = 5;    // đệm chống lệch thời gian
+
+            var locked = await _match.TryLockTripAsync(
+                trip.Id,
+                TimeSpan.FromSeconds(offerWindowSeconds + safetySeconds)
+            );
             if (!locked) return trip;
 
-            var marked = await _match.MarkDriverAssignedAsync(
-                driverId: candidate.DriverId.ToString(),
-                tripId: trip.Id
+            await _offers.SetPendingAsync(
+                trip.Id,
+                candidate.DriverId,
+                TimeSpan.FromSeconds(offerWindowSeconds + safetySeconds),
+                ct
             );
-            if (!marked) return trip;
 
-            trip.AssignedDriverId = candidate.DriverId;
-            trip.Status = TripStatus.Accepted;
-            await _repo.UpdateAsync(trip, ct);
-
-            var assignedEvt = new TripAssigned(
+            var offered = new TripOffered(
                 TripId: trip.Id,
                 DriverId: candidate.DriverId,
-                AssignedAtUtc: DateTime.UtcNow
+                TtlSeconds: offerWindowSeconds   
             );
-            await _bus.PublishAsync(Routing.Keys.TripAssigned, assignedEvt, ct);
+
+            await _bus.PublishAsync(Routing.Keys.TripOffered, offered, ct);
 
             return trip;
         }

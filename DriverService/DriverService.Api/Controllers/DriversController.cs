@@ -1,6 +1,9 @@
 ﻿using DriverService.Application.Abstractions;
 using DriverService.Application.Services;
 using DriverService.Infrastructure.Data;
+using Messaging.Contracts.Routing;
+using Messaging.Contracts.Trips;
+using Messaging.RabbitMQ.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
 
@@ -14,11 +17,13 @@ namespace DriverService.Api.Controllers
 
         private readonly IDriverService _driverSvc;
 
-        public DriversController(IConnectionMultiplexer redis, IDriverService driverSvc)
+        private readonly IEventPublisher _bus;
+
+        public DriversController(IConnectionMultiplexer redis, IDriverService driverSvc, IEventPublisher bus)
         {
             _driverSvc = driverSvc;
             _redis = redis;
-
+            _bus = bus;
         }
 
         // Bật online kèm tọa độ ban đầu
@@ -83,6 +88,15 @@ namespace DriverService.Api.Controllers
                 });
             }
             return Ok(list);
+        }
+
+        [HttpPost("{driverId:guid}/trips/{tripId:guid}/decline")]
+        public async Task<IActionResult> Decline(Guid driverId, Guid tripId, CancellationToken ct)
+        {
+            await _bus.PublishAsync(Routing.Keys.TripOfferDeclined,
+                new TripOfferDeclined(tripId, driverId), ct);
+
+            return Accepted(new { tripId, driverId, status = "declined" });
         }
 
         [HttpGet("health")]
