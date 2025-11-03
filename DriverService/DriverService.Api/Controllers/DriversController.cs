@@ -60,6 +60,31 @@ namespace DriverService.Api.Controllers
             return Ok(new { driverId, status = "available" });
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] double lat, [FromQuery] double lng, [FromQuery] double radiusKm = 5, [FromQuery] int take = 10)
+        {
+            var db = _redis.GetDatabase();
+            var results = await db.GeoRadiusAsync("drivers:geo", lng, lat, radiusKm, GeoUnit.Kilometers, count: take, order: Order.Ascending);
+
+            var list = new List<object>();
+            foreach (var r in results)
+            {
+                var id = r.Member.ToString();
+                var hash = await db.HashGetAllAsync($"driver:{id}");
+                var obj = hash.ToStringDictionary();
+                list.Add(new
+                {
+                    driverId = id,
+                    distanceKm = r.Distance ?? 0,
+                    name = obj.GetValueOrDefault("name"),
+                    lat = double.TryParse(obj.GetValueOrDefault("lat"), out var a) ? a : 0,
+                    lng = double.TryParse(obj.GetValueOrDefault("lng"), out var b) ? b : 0,
+                    available = obj.GetValueOrDefault("available") == "1"
+                });
+            }
+            return Ok(list);
+        }
+
         [HttpGet("health")]
         public IActionResult Health() => Ok("driver ok");
     }

@@ -43,7 +43,7 @@ namespace TripService.Application.Services
             );
             if (candidate is null) return trip;
 
-            var locked = await _match.TryLockTripAsync(trip.Id, TimeSpan.FromSeconds(5));
+            var locked = await _match.TryLockTripAsync(trip.Id, TimeSpan.FromSeconds(15));
             if (!locked) return trip;
 
             var marked = await _match.MarkDriverAssignedAsync(

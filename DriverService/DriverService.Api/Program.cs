@@ -20,7 +20,7 @@ builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(8080, lo =>
     {
-        lo.Protocols = HttpProtocols.Http2; // quan trọng
+        lo.Protocols = HttpProtocols.Http2;
     });
 });
 
