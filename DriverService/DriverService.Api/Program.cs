@@ -16,11 +16,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.WebHost.ConfigureKestrel(options =>
+builder.WebHost.ConfigureKestrel(k =>
 {
-    options.ListenAnyIP(8080, lo =>
+    // Giữ nguyên cổng gRPC h2c cho TripService
+    k.ListenAnyIP(8080, o =>
     {
-        lo.Protocols = HttpProtocols.Http2; // quan trọng
+        o.Protocols = HttpProtocols.Http2; // gRPC (h2c)
+    });
+
+    // THÊM cổng REST HTTP/1.1 để Gateway proxy
+    k.ListenAnyIP(8081, o =>
+    {
+        o.Protocols = HttpProtocols.Http1; // REST (HTTP/1.1)
     });
 });
 

@@ -1,6 +1,9 @@
 ﻿using DriverService.Application.Abstractions;
 using DriverService.Application.Services;
 using DriverService.Infrastructure.Data;
+using Messaging.Contracts.Routing;
+using Messaging.Contracts.Trips;
+using Messaging.RabbitMQ.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
 
@@ -14,11 +17,13 @@ namespace DriverService.Api.Controllers
 
         private readonly IDriverService _driverSvc;
 
-        public DriversController(IConnectionMultiplexer redis, IDriverService driverSvc)
+        private readonly IEventPublisher _bus;
+
+        public DriversController(IConnectionMultiplexer redis, IDriverService driverSvc, IEventPublisher bus)
         {
             _driverSvc = driverSvc;
             _redis = redis;
-
+            _bus = bus;
         }
 
         // Bật online kèm tọa độ ban đầu
@@ -58,6 +63,40 @@ namespace DriverService.Api.Controllers
             // await _db.SaveChangesAsync();
 
             return Ok(new { driverId, status = "available" });
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] double lat, [FromQuery] double lng, [FromQuery] double radiusKm = 5, [FromQuery] int take = 10)
+        {
+            var db = _redis.GetDatabase();
+            var results = await db.GeoRadiusAsync("drivers:geo", lng, lat, radiusKm, GeoUnit.Kilometers, count: take, order: Order.Ascending);
+
+            var list = new List<object>();
+            foreach (var r in results)
+            {
+                var id = r.Member.ToString();
+                var hash = await db.HashGetAllAsync($"driver:{id}");
+                var obj = hash.ToStringDictionary();
+                list.Add(new
+                {
+                    driverId = id,
+                    distanceKm = r.Distance ?? 0,
+                    name = obj.GetValueOrDefault("name"),
+                    lat = double.TryParse(obj.GetValueOrDefault("lat"), out var a) ? a : 0,
+                    lng = double.TryParse(obj.GetValueOrDefault("lng"), out var b) ? b : 0,
+                    available = obj.GetValueOrDefault("available") == "1"
+                });
+            }
+            return Ok(list);
+        }
+
+        [HttpPost("{driverId:guid}/trips/{tripId:guid}/decline")]
+        public async Task<IActionResult> Decline(Guid driverId, Guid tripId, CancellationToken ct)
+        {
+            await _bus.PublishAsync(Routing.Keys.TripOfferDeclined,
+                new TripOfferDeclined(tripId, driverId), ct);
+
+            return Accepted(new { tripId, driverId, status = "declined" });
         }
 
         [HttpGet("health")]
