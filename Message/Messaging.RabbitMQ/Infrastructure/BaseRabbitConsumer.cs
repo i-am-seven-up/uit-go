@@ -46,7 +46,7 @@ namespace Messaging.RabbitMQ.Infrastructure
                 DispatchConsumersAsync = true
             };
 
-            _conn = factory.CreateConnection();
+            _conn = RabbitMqConnectionHelper.ConnectWithRetry(factory);
             _ch = _conn.CreateModel();
             _ch.ExchangeDeclare(_exchangeName, ExchangeType.Topic, durable: true);
 

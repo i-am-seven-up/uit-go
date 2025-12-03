@@ -6,9 +6,12 @@ using DriverService.Infrastructure.Data;
 using DriverService.Infrastructure.Repositories;
 using Messaging.Contracts.Routing;
 using Messaging.RabbitMQ;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.Text;
 
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
@@ -36,6 +39,30 @@ builder.Services.AddGrpc();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// JWT Authentication
+var jwtSecret = builder.Configuration["Jwt:Secret"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddDbContext<DriverDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
@@ -44,8 +71,9 @@ builder.Services.AddScoped<IDriverService, DriverService.Application.Services.Dr
 
 builder.Services.AddRabbitMqEventBus(builder.Configuration, Routing.Exchange);
 builder.Services.AddHostedService<TripRequestedConsumer>();
-builder.Services.AddHostedService<TripCreatedConsumer>();  
+builder.Services.AddHostedService<TripCreatedConsumer>();
 builder.Services.AddHostedService<TripAssignedConsumer>();
+builder.Services.AddHostedService<TripCancelledConsumer>();
 builder.Services.AddScoped<DriverLocationService>(); 
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis"))
@@ -63,6 +91,7 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
@@ -79,3 +108,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+// Make the implicit Program class public for integration tests
+public partial class Program { }

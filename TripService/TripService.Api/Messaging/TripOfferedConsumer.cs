@@ -85,7 +85,7 @@ namespace TripService.Api.Messaging
             if (!resp.Success) return;
 
             trip2.AssignedDriverId = message.DriverId;
-            trip2.Status = TripStatus.Accepted;
+            trip2.Status = TripStatus.DriverAccepted;
             await _repo.UpdateAsync(trip2, ct);
 
             var assigned = new TripAssigned(
@@ -104,10 +104,23 @@ namespace TripService.Api.Messaging
             var trip = await _repo.GetAsync(tripId, ct);
             if (trip is null) return;
 
-            var next = await _match.FindBestDriverAsync(trip.StartLat, trip.StartLng, radiusKm: 20.0, take: 10);
+            // Get list of drivers already tried to exclude them
+            var triedDrivers = await _match.GetTriedDriversAsync(tripId);
+
+            var next = await _match.FindBestDriverAsync(
+                trip.StartLat,
+                trip.StartLng,
+                radiusKm: 20.0,
+                take: 10,
+                excludeDriverIds: triedDrivers);
+
             if (next is null) return;
 
             const int ttl = 15;
+
+            // Track this driver as tried
+            await _match.AddTriedDriverAsync(trip.Id, next.DriverId);
+
             await _offers.SetPendingAsync(trip.Id, next.DriverId, TimeSpan.FromSeconds(ttl), ct);
 
             var offered = new TripOffered(trip.Id, next.DriverId, ttl);

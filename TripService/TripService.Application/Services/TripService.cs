@@ -21,7 +21,7 @@ namespace TripService.Application.Services
 
         public async Task<Trip> CreateAsync(Trip trip, CancellationToken ct = default)
         {
-            trip.Status = TripStatus.Searching;
+            // Trip starts in Requested state (default)
             await _repo.AddAsync(trip, ct);
 
             var createdEvt = new TripCreated(
@@ -33,18 +33,45 @@ namespace TripService.Application.Services
             );
             await _bus.PublishAsync(Routing.Keys.TripCreated, createdEvt, ct);
 
+            // Transition to FindingDriver state
+            trip.StartFindingDriver();
+            await _repo.UpdateAsync(trip, ct);
+
             var candidate = await _match.FindBestDriverAsync(
                 lat: trip.StartLat, lng: trip.StartLng, radiusKm: 20.0, take: 10);
-            if (candidate is null) return trip;
+            if (candidate is null)
+            {
+                trip.MarkNoDriverAvailable();
+                await _repo.UpdateAsync(trip, ct);
+                return trip;
+            }
 
-            const int offerWindowSeconds = 15;   // thời gian tài xế được phép decline
-            const int safetySeconds = 5;    // đệm chống lệch thời gian
+            const int offerWindowSeconds = 15;
+            const int safetySeconds = 5;
 
-            var locked = await _match.TryLockTripAsync(
+            // Lock the DRIVER to prevent concurrent assignment to multiple trips
+            var driverLocked = await _match.TryLockDriverAsync(
+                candidate.DriverId,
                 trip.Id,
                 TimeSpan.FromSeconds(offerWindowSeconds + safetySeconds)
             );
-            if (!locked) return trip;
+            if (!driverLocked)
+            {
+                // Driver is already locked by another trip, mark as no driver available
+                trip.MarkNoDriverAvailable();
+                await _repo.UpdateAsync(trip, ct);
+                return trip;
+            }
+
+            // Assign driver to trip
+            trip.AssignDriver(candidate.DriverId);
+            await _repo.UpdateAsync(trip, ct);
+
+            // Track that we've tried this driver
+            await _match.AddTriedDriverAsync(trip.Id, candidate.DriverId);
+
+            // Mark driver as assigned in DriverService (via gRPC)
+            await _match.MarkDriverAssignedAsync(candidate.DriverId.ToString(), trip.Id);
 
             await _offers.SetPendingAsync(
                 trip.Id,
@@ -56,7 +83,7 @@ namespace TripService.Application.Services
             var offered = new TripOffered(
                 TripId: trip.Id,
                 DriverId: candidate.DriverId,
-                TtlSeconds: offerWindowSeconds   
+                TtlSeconds: offerWindowSeconds
             );
 
             await _bus.PublishAsync(Routing.Keys.TripOffered, offered, ct);
@@ -68,11 +95,22 @@ namespace TripService.Application.Services
         public Task<Trip?> GetAsync(Guid id, CancellationToken ct = default)
             => _repo.GetAsync(id, ct);
 
-        public async Task CancelAsync(Guid id, CancellationToken ct = default)
+        public async Task CancelAsync(Guid id, string reason, CancellationToken ct = default)
         {
             var t = await _repo.GetAsync(id, ct) ?? throw new KeyNotFoundException();
-            t.Status = TripStatus.Canceled;
+            t.Cancel(reason);
             await _repo.UpdateAsync(t, ct);
+
+            // If driver was assigned, publish event to release driver
+            if (t.AssignedDriverId.HasValue)
+            {
+                var cancelledEvt = new TripCancelled(
+                    TripId: t.Id,
+                    DriverId: t.AssignedDriverId.Value,
+                    Reason: reason
+                );
+                await _bus.PublishAsync(Routing.Keys.TripCancelled, cancelledEvt, ct);
+            }
         }
     }
 }

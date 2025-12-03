@@ -24,7 +24,8 @@ namespace TripService.Application.Services
         public async Task<DriverCandidate?> FindBestDriverAsync(
             double lat, double lng,
             double radiusKm,
-            int take)
+            int take,
+            HashSet<Guid>? excludeDriverIds = null)
         {
             var db = _redis.GetDatabase();
 
@@ -40,6 +41,11 @@ namespace TripService.Application.Services
             foreach (var r in results)
             {
                 var driverId = r.Member.ToString();
+                var driverGuid = Guid.Parse(driverId);
+
+                // Skip drivers that have already been tried for this trip
+                if (excludeDriverIds != null && excludeDriverIds.Contains(driverGuid))
+                    continue;
 
                 // confirm với DriverService qua gRPC
                 var info = await _driverGrpc.GetDriverInfoAsync(
@@ -54,12 +60,26 @@ namespace TripService.Application.Services
 
                 return new DriverCandidate
                 {
-                    DriverId = Guid.Parse(driverId),
+                    DriverId = driverGuid,
                     DistanceKm = r.Distance ?? 0
                 };
             }
 
             return null;
+        }
+
+        public async Task<HashSet<Guid>> GetTriedDriversAsync(Guid tripId)
+        {
+            var db = _redis.GetDatabase();
+            var members = await db.SetMembersAsync($"trip:{tripId}:tried_drivers");
+            return members.Select(m => Guid.Parse(m.ToString())).ToHashSet();
+        }
+
+        public async Task AddTriedDriverAsync(Guid tripId, Guid driverId)
+        {
+            var db = _redis.GetDatabase();
+            await db.SetAddAsync($"trip:{tripId}:tried_drivers", driverId.ToString());
+            await db.KeyExpireAsync($"trip:{tripId}:tried_drivers", TimeSpan.FromHours(1));
         }
 
         public async Task<bool> TryLockTripAsync(Guid tripId, TimeSpan ttl)
@@ -68,6 +88,17 @@ namespace TripService.Application.Services
             return await db.StringSetAsync(
                 $"trip:{tripId}:lock",
                 "1",
+                ttl,
+                When.NotExists
+            );
+        }
+
+        public async Task<bool> TryLockDriverAsync(Guid driverId, Guid tripId, TimeSpan ttl)
+        {
+            var db = _redis.GetDatabase();
+            return await db.StringSetAsync(
+                $"driver:{driverId}:trip_lock",
+                tripId.ToString(),
                 ttl,
                 When.NotExists
             );

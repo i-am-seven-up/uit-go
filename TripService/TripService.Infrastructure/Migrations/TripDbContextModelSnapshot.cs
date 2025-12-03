@@ -31,14 +31,35 @@ namespace TripService.Infrastructure.Migrations
                     b.Property<Guid?>("AssignedDriverId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("CancellationReason")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DriverAcceptedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DriverArrivedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DriverAssignedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DriverRetryCount")
+                        .HasColumnType("integer");
 
                     b.Property<double>("EndLat")
                         .HasColumnType("double precision");
 
                     b.Property<double>("EndLng")
                         .HasColumnType("double precision");
+
+                    b.Property<DateTime?>("LastStatusChangeAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("PassengerId")
                         .HasColumnType("uuid");
@@ -52,6 +73,12 @@ namespace TripService.Infrastructure.Migrations
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("TripCompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("TripStartedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

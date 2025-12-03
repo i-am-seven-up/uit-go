@@ -4,6 +4,7 @@ using DriverService.Infrastructure.Data;
 using Messaging.Contracts.Routing;
 using Messaging.Contracts.Trips;
 using Messaging.RabbitMQ.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
 
@@ -27,26 +28,56 @@ namespace DriverService.Api.Controllers
         }
 
         // Bật online kèm tọa độ ban đầu
-        [HttpPost("{id:guid}/online")]
-        public async Task<IActionResult> SetOnline(Guid id, [FromBody] SetOnlineRequest req, CancellationToken ct)
+        [Authorize]
+        [HttpPost("online")]
+        public async Task<IActionResult> SetOnline([FromBody] SetOnlineRequest req, CancellationToken ct)
         {
+            // Extract driver ID from JWT sub claim
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?? User.FindFirst("sub");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var driverId))
+            {
+                return Unauthorized(new { error = "Invalid or missing driver ID in token" });
+            }
+
             // lưu lat/lng vào DB và Redis
-            await _driverSvc.UpdateLocationAsync(id, req.Lat, req.Lng, ct);
-            await _driverSvc.SetOnlineAsync(id, true, ct);
-            return Ok(new { id, online = true });
+            await _driverSvc.UpdateLocationAsync(driverId, req.Lat, req.Lng, ct);
+            await _driverSvc.SetOnlineAsync(driverId, true, ct);
+            return Ok(new { id = driverId, online = true });
         }
 
         // Cập nhật vị trí (tài xế đang online)
-        [HttpPost("{id:guid}/location")]
-        public async Task<IActionResult> UpdateLocation(Guid id, [FromBody] UpdateLocationRequest req, CancellationToken ct)
+        [Authorize]
+        [HttpPost("location")]
+        public async Task<IActionResult> UpdateLocation([FromBody] UpdateLocationRequest req, CancellationToken ct)
         {
-            await _driverSvc.UpdateLocationAsync(id, req.Lat, req.Lng, ct);
-            return Ok(new { id, updated = true });
+            // Extract driver ID from JWT sub claim
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?? User.FindFirst("sub");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var driverId))
+            {
+                return Unauthorized(new { error = "Invalid or missing driver ID in token" });
+            }
+
+            await _driverSvc.UpdateLocationAsync(driverId, req.Lat, req.Lng, ct);
+            return Ok(new { id = driverId, updated = true });
         }
 
-        [HttpPost("{driverId}/trip-finished")]
-        public async Task<IActionResult> TripFinished(Guid driverId)
+        [Authorize]
+        [HttpPost("trip-finished")]
+        public async Task<IActionResult> TripFinished()
         {
+            // Extract driver ID from JWT sub claim
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?? User.FindFirst("sub");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var driverId))
+            {
+                return Unauthorized(new { error = "Invalid or missing driver ID in token" });
+            }
+
             var dbRedis = _redis.GetDatabase();
 
             // đánh dấu driver available lại
@@ -90,11 +121,46 @@ namespace DriverService.Api.Controllers
             return Ok(list);
         }
 
-        [HttpPost("{driverId:guid}/trips/{tripId:guid}/decline")]
-        public async Task<IActionResult> Decline(Guid driverId, Guid tripId, CancellationToken ct)
+        [Authorize]
+        [HttpPost("trips/{tripId:guid}/accept")]
+        public async Task<IActionResult> AcceptTrip(Guid tripId, CancellationToken ct)
         {
+            // Extract driver ID from JWT sub claim
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?? User.FindFirst("sub");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var driverId))
+            {
+                return Unauthorized(new { error = "Invalid or missing driver ID in token" });
+            }
+
+            await _bus.PublishAsync(
+                Routing.Keys.DriverAcceptedTrip,
+                new DriverAcceptedTrip(tripId, driverId),
+                ct);
+
+            return Accepted(new { tripId, driverId, status = "accepted" });
+        }
+
+        [Authorize]
+        [HttpPost("trips/{tripId:guid}/decline")]
+        public async Task<IActionResult> Decline(Guid tripId, CancellationToken ct)
+        {
+            // Extract driver ID from JWT sub claim
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?? User.FindFirst("sub");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var driverId))
+            {
+                return Unauthorized(new { error = "Invalid or missing driver ID in token" });
+            }
+
+            // Publish both events: one for offer tracking, one for business logic
             await _bus.PublishAsync(Routing.Keys.TripOfferDeclined,
                 new TripOfferDeclined(tripId, driverId), ct);
+
+            await _bus.PublishAsync(Routing.Keys.DriverDeclinedTrip,
+                new DriverDeclinedTrip(tripId, driverId), ct);
 
             return Accepted(new { tripId, driverId, status = "declined" });
         }

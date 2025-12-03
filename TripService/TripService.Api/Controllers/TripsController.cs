@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TripService.Application.Abstractions;
 using TripService.Domain.Entities;
@@ -12,11 +13,18 @@ namespace TripService.Api.Controllers
         private readonly ITripService _tripService;
         public TripsController(ITripService svc) => _tripService = svc;
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateTripRequest req, CancellationToken ct)
         {
-            // TODO: sau này lấy từ JWT (user id). Hiện tại tạm hardcode.
-            var passengerId = Guid.NewGuid();
+            // Extract PassengerId from JWT sub claim
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?? User.FindFirst("sub");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var passengerId))
+            {
+                return Unauthorized(new { error = "Invalid or missing user ID in token" });
+            }
 
             var trip = new Trip
             {
@@ -34,6 +42,7 @@ namespace TripService.Api.Controllers
             return Ok(created);
         }
 
+        [Authorize]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id, CancellationToken ct)
         {
@@ -42,15 +51,43 @@ namespace TripService.Api.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPost("{id:guid}/cancel")]
-        public async Task<IActionResult> Cancel(Guid id, CancellationToken ct)
+        public async Task<IActionResult> Cancel(Guid id, [FromBody] CancelTripRequest? request, CancellationToken ct)
         {
-            await _tripService.CancelAsync(id, ct);
-            return NoContent();
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?? User.FindFirst("sub");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var passengerId))
+            {
+                return Unauthorized(new { error = "Invalid or missing user ID in token" });
+            }
+
+            var trip = await _tripService.GetAsync(id, ct);
+            if (trip == null)
+                return NotFound();
+
+            // Verify ownership
+            if (trip.PassengerId != passengerId)
+                return Forbid();
+
+            var reason = request?.Reason ?? "Passenger cancelled";
+
+            try
+            {
+                await _tripService.CancelAsync(id, reason, ct);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [HttpGet("health")]
         public IActionResult Health() => Ok("trip ok");
-
     }
+
+    public record CreateTripRequest(double PickupLat, double PickupLng, double DropoffLat, double DropoffLng);
+    public record CancelTripRequest(string? Reason);
 }
