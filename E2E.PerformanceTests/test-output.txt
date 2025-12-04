@@ -1,0 +1,111 @@
+C:\Users\tophu\source\repos\uit-go\E2E.PerformanceTests\E2E.PerformanceTests.csproj : warning NU1603: E2E.PerformanceTests depends on Npgsql (>= 8.0.21) but Npgsql 8.0.21 was not found. Npgsql 9.0.0 was resolved instead.
+C:\Users\tophu\source\repos\uit-go\E2E.PerformanceTests\E2E.PerformanceTests.csproj : warning NU1603: E2E.PerformanceTests depends on Npgsql (>= 8.0.21) but Npgsql 8.0.21 was not found. Npgsql 9.0.0 was resolved instead.
+╔═══════════════════════════════════════════════════════════╗
+║   UIT-GO E2E PERFORMANCE TESTS                           ║
+║   Phase 1 Baseline & Phase 2 Comparison                  ║
+╚═══════════════════════════════════════════════════════════╝
+
+Checking prerequisites...
+  ✓ API Gateway (http://127.0.0.1:8080)
+  ✓ TripService (http://127.0.0.1:5002)
+  ✓ DriverService (http://127.0.0.1:5003)
+  ✓ Redis (127.0.0.1:6379)
+✓ All services are healthy
+
+╔═══════════════════════════════════════════════════════════╗
+║   WORKLOAD A: HIGH-VOLUME TRIP CREATION                  ║
+╚═══════════════════════════════════════════════════════════╝
+
+Cleaning up Redis...
+✓ Redis cleaned (500 driver keys deleted)
+Seeding 500 drivers in Redis...
+✓ Seeded 500 drivers
+Online drivers: 500
+Test duration: 60s
+Concurrent users: 100
+Ramp-up period: 10s
+
+[38;5;9m  _   _   ____                        _                       ____  [0m            
+[38;5;9m | \ | | | __ )    ___    _ __ ___   | |__     ___   _ __    | ___| [0m            
+[38;5;9m |  \| | |  _ \   / _ \  | '_ ` _ \  | '_ \   / _ \ | '__|   |___ \ [0m            
+[38;5;9m | |\  | | |_) | | (_) | | | | | | | | |_) | |  __/ | |       ___) |[0m            
+[38;5;9m |_| \_| |____/   \___/  |_| |_| |_| |_.__/   \___| |_|      |____/ [0m            
+[38;5;9m                                                                    [0m            
+11:29:03 [[38;5;39mINF[0m] NBomber [38;5;10m"6.0.0"[0m started a new session: [38;5;10m"2025-12-03_04.29.08_session_c0600945"[0m
+11:29:03 [[38;5;39mINF[0m] NBomber started as single node
+11:29:03 [[38;5;39mINF[0m] License validation....
+11:29:03 [[38;5;11mWRN[0m] THIS VERSION IS FREE ONLY FOR PERSONAL USE. You can't use it for an 
+organization.
+11:29:03 [[38;5;39mINF[0m] Reports folder: [38;5;10m"C:\Users\tophu\source\repos\uit-go\E2E.PerformanceTests\bin\Release\net8.0\repo[0m
+[38;5;10mrts\2025-12-03_04.29.08_session_c0600945"[0m
+11:29:03 [[38;5;39mINF[0m] Plugins: no plugins were loaded
+11:29:03 [[38;5;39mINF[0m] Reporting sinks: no reporting sinks were loaded
+11:29:03 [[38;5;39mINF[0m] Starting init...
+11:29:03 [[38;5;39mINF[0m] Target scenarios: [38;5;10m"trip_creation"[0m
+11:29:03 [[38;5;39mINF[0m] Init finished
+11:29:03 [[38;5;39mINF[0m] Starting bombing...
+11:30:02 [[38;5;11mWRN[0m] Stopping test early: [38;5;10m"Stopping test because of too many fails. Scenario 'trip_creation' contains [0m
+[38;5;10m'5338' fails."[0m
+11:30:06 [[38;5;39mINF[0m] Calculating final statistics...
+
+────────────────────────────────── test info ───────────────────────────────────
+
+test suite: [38;5;10mnbomber_default_test_suite_name[0m
+test name: [38;5;10mnbomber_default_test_name[0m
+session id: [38;5;10m2025-12-03_04.29.08_session_c0600945[0m
+
+──────────────────────────────── scenario stats ────────────────────────────────
+
+scenario: [38;5;10mtrip_creation[0m
+  - ok count: [38;5;10m0[0m
+  - fail count: [38;5;9m5350[0m
+  - all data: [38;5;10m4.7[0m MB
+  - duration: [38;5;10m00:00:59[0m
+
+load simulations: 
+  - [38;5;10mramping_inject[0m, rate: [38;5;10m100[0m, interval: [38;5;10m00:00:01[0m, during: [38;5;10m00:00:10[0m
+  - [38;5;10minject[0m, rate: [38;5;10m100[0m, interval: [38;5;10m00:00:01[0m, during: [38;5;10m00:00:50[0m
+
+┌─────────────────────────┬────────────────────────────────────────┐
+│                    step │ ok stats                               │
+├─────────────────────────┼────────────────────────────────────────┤
+│                    name │ [38;5;39mglobal information[0m                     │
+│           request count │ all = [38;5;10m5350[0m, ok = [38;5;10m0[0m, RPS = [38;5;10m0[0m            │
+│            latency (ms) │ min = [38;5;10m0[0m, mean = [38;5;10m0[0m, max = [38;5;10m0[0m, StdDev = [38;5;10m0[0m │
+│ latency percentile (ms) │ p50 = [38;5;10m0[0m, p75 = [38;5;10m0[0m, p95 = [38;5;10m0[0m, p99 = [38;5;10m0[0m     │
+└─────────────────────────┴────────────────────────────────────────┘
+┌─────────────────────────┬────────────────────────────────────────────────────┐
+│                    step │ failures stats                                     │
+├─────────────────────────┼────────────────────────────────────────────────────┤
+│                    name │ [38;5;39mglobal information[0m                                 │
+│           request count │ all = [38;5;10m5350[0m, fail = [38;5;9m5350[0m, RPS = [38;5;9m90.7[0m                │
+│            latency (ms) │ min = [38;5;9m2.21[0m, mean = [38;5;9m3.53[0m, max = [38;5;9m207.68[0m, StdDev =    │
+│                         │ [38;5;9m4.35[0m                                               │
+│ latency percentile (ms) │ p50 = [38;5;9m3.21[0m, p75 = [38;5;9m3.7[0m, p95 = [38;5;9m4.64[0m, p99 = [38;5;9m5.93[0m      │
+│      data transfer (KB) │ min = [38;5;9m0.9[0m, mean = [38;5;9m0.905[0m, max = [38;5;9m0.906[0m, all = [38;5;9m4.7[0m MB │
+└─────────────────────────┴────────────────────────────────────────────────────┘
+
+status codes for scenario: [38;5;10mtrip_creation[0m
+┌──────────────────────┬───────┬─────────┐
+│          status code │ count │ message │
+├──────────────────────┼───────┼─────────┤
+│ [38;5;9mUnsupportedMediaType[0m │ 5350  │         │
+└──────────────────────┴───────┴─────────┘
+
+
+11:30:06 [[38;5;39mINF[0m] Reports saved in folder: [38;5;10m"C:\Users\tophu\source\repos\uit-go\E2E.PerformanceTests\reports\2025-12-03_04.2[0m
+[38;5;10m9.08_session_c0600945"[0m
+11:30:06 [[38;5;11mWRN[0m] THIS VERSION IS FREE ONLY FOR PERSONAL USE. You can't use it for an 
+organization.
+
+═══════════════════════════════════════════════════════════
+  WORKLOAD A RESULTS
+═══════════════════════════════════════════════════════════
+
+❌ Error: Index was outside the bounds of the array.
+
+Stack trace:
+   at E2E.PerformanceTests.Workloads.WorkloadA_TripCreation.RunAsync()
+   at E2E.PerformanceTests.Program.Main(String[] args) in C:\Users\tophu\source\repos\uit-go\E2E.PerformanceTests\Program.cs:line 39
+
+Press any key to exit...
