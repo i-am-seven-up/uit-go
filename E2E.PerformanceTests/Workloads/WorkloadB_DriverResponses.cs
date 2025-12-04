@@ -82,6 +82,15 @@ public class WorkloadB_DriverResponses
         }
 
         Console.WriteLine($"✓ Created {trips.Count} trips");
+
+        // Safety check: Ensure we have trips to work with
+        if (trips.Count == 0)
+        {
+            Console.WriteLine("❌ No trips were successfully created. Cannot run workload.");
+            Console.WriteLine("   This usually means the API is not responding or returning errors.");
+            return null!;
+        }
+
         Console.WriteLine($"Accept rate: {TestConfig.WorkloadB.AcceptRate * 100}%");
         Console.WriteLine($"Test duration: {TestConfig.WorkloadB.DurationSeconds}s");
         Console.WriteLine();
@@ -96,6 +105,10 @@ public class WorkloadB_DriverResponses
         // Define the driver response scenario
         var scenario = Scenario.Create("driver_responses", async context =>
         {
+            // Safety check within scenario
+            if (trips.Count == 0)
+                return Response.Fail();
+
             // Pick a random trip
             var (tripId, driverId) = trips[random.Next(trips.Count)];
             var token = JwtTokenHelper.GenerateDriverToken(driverId);

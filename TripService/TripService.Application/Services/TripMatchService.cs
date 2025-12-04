@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Shared;
 
 namespace TripService.Application.Services
 {
@@ -29,14 +30,21 @@ namespace TripService.Application.Services
         {
             var db = _redis.GetDatabase();
 
-            var results = await db.GeoRadiusAsync(
-                "drivers:online",
-                longitude: lng,
-                latitude: lat,
-                radius: radiusKm,
-                unit: GeoUnit.Kilometers,
-                count: take,
-                order: Order.Ascending);
+            // Query multiple partitions in parallel (geohash-based partitioning)
+            var partitions = GeohashHelper.GetNeighborPartitions(lat, lng);
+            var tasks = partitions.Select(partition =>
+                db.GeoRadiusAsync(partition, lng, lat, radiusKm, GeoUnit.Kilometers));
+
+            var partitionResults = await Task.WhenAll(tasks);
+
+            // Flatten results, remove duplicates, and sort by distance
+            var results = partitionResults
+                .SelectMany(r => r)
+                .GroupBy(r => r.Member.ToString())
+                .Select(g => g.First())
+                .OrderBy(r => r.Distance)
+                .Take(take)
+                .ToList();
 
             foreach (var r in results)
             {

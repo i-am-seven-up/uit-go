@@ -1,0 +1,14 @@
+2025-12-04 21:15:56.060 +07:00 [INF] [ThreadId:7] NBomber 6.0.0 started a new session: 2025-12-04_14.15.00_session_4605cdc7
+2025-12-04 21:15:56.113 +07:00 [INF] [ThreadId:7] NBomber started as single node
+2025-12-04 21:15:56.115 +07:00 [INF] [ThreadId:7] License validation....
+2025-12-04 21:15:56.116 +07:00 [WRN] [ThreadId:7] THIS VERSION IS FREE ONLY FOR PERSONAL USE. You can't use it for an organization.
+2025-12-04 21:15:56.141 +07:00 [INF] [ThreadId:7] Reports folder: C:\Users\tophu\source\repos\uit-go\E2E.PerformanceTests\bin\Debug\net8.0\reports\2025-12-04_14.15.00_session_4605cdc7
+2025-12-04 21:15:56.142 +07:00 [INF] [ThreadId:7] Plugins: no plugins were loaded
+2025-12-04 21:15:56.143 +07:00 [INF] [ThreadId:7] Reporting sinks: no reporting sinks were loaded
+2025-12-04 21:15:56.143 +07:00 [INF] [ThreadId:7] Starting init...
+2025-12-04 21:15:56.153 +07:00 [INF] [ThreadId:7] Target scenarios: trip_creation
+2025-12-04 21:15:56.156 +07:00 [INF] [ThreadId:7] Init finished
+2025-12-04 21:15:56.174 +07:00 [INF] [ThreadId:7] Starting bombing...
+2025-12-04 21:17:44.600 +07:00 [INF] [ThreadId:26] Calculating final statistics...
+2025-12-04 21:17:45.381 +07:00 [INF] [ThreadId:26] Reports saved in folder: C:\Users\tophu\source\repos\uit-go\E2E.PerformanceTests\reports\2025-12-04_14.15.00_session_4605cdc7
+2025-12-04 21:17:45.382 +07:00 [WRN] [ThreadId:26] THIS VERSION IS FREE ONLY FOR PERSONAL USE. You can't use it for an organization.

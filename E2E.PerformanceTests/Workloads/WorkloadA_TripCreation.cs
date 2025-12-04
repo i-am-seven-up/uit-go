@@ -15,7 +15,7 @@ public class WorkloadA_TripCreation
     public static async Task<ScenarioStats> RunAsync()
     {
         Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
-        Console.WriteLine("║   WORKLOAD A: HIGH-VOLUME TRIP CREATION                  ║");
+        Console.WriteLine("║   WORKLOAD A: HARDCORE TRIP E2E MATCHING PIPELINE       ║");
         Console.WriteLine("╚═══════════════════════════════════════════════════════════╝");
         Console.WriteLine();
 
@@ -26,9 +26,12 @@ public class WorkloadA_TripCreation
 
         var onlineDrivers = await redis.GetOnlineDriverCount();
         Console.WriteLine($"Online drivers: {onlineDrivers}");
-        Console.WriteLine($"Test duration: {TestConfig.WorkloadA.DurationSeconds}s");
-        Console.WriteLine($"Concurrent users: {TestConfig.WorkloadA.ConcurrentUsers}");
-        Console.WriteLine($"Ramp-up period: {TestConfig.WorkloadA.RampUpSeconds}s");
+        Console.WriteLine();
+        Console.WriteLine("HARDCORE TEST PROFILE:");
+        Console.WriteLine($"  Phase 1 - Ramp: 0→{TestConfig.WorkloadA.RampRate}/s over {TestConfig.WorkloadA.RampDurationSeconds}s");
+        Console.WriteLine($"  Phase 2 - Sustain: {TestConfig.WorkloadA.SustainRate}/s for {TestConfig.WorkloadA.SustainDurationSeconds}s");
+        Console.WriteLine($"  Phase 3 - Spike: {TestConfig.WorkloadA.SpikeRate}/s for {TestConfig.WorkloadA.SpikeDurationSeconds}s");
+        Console.WriteLine($"  Total duration: {TestConfig.WorkloadA.RampDurationSeconds + TestConfig.WorkloadA.SustainDurationSeconds + TestConfig.WorkloadA.SpikeDurationSeconds}s");
         Console.WriteLine();
 
         // Create HTTP factory
@@ -61,15 +64,23 @@ public class WorkloadA_TripCreation
         })
         .WithoutWarmUp()
         .WithLoadSimulations(
+            // Phase 1: Ramp up to expose bottlenecks
             Simulation.RampingInject(
-                rate: TestConfig.WorkloadA.ConcurrentUsers,
+                rate: TestConfig.WorkloadA.RampRate,
                 interval: TimeSpan.FromSeconds(1),
-                during: TimeSpan.FromSeconds(TestConfig.WorkloadA.RampUpSeconds)
+                during: TimeSpan.FromSeconds(TestConfig.WorkloadA.RampDurationSeconds)
             ),
+            // Phase 2: Sustain load to observe queue buildup
             Simulation.Inject(
-                rate: TestConfig.WorkloadA.ConcurrentUsers,
+                rate: TestConfig.WorkloadA.SustainRate,
                 interval: TimeSpan.FromSeconds(1),
-                during: TimeSpan.FromSeconds(TestConfig.WorkloadA.DurationSeconds - TestConfig.WorkloadA.RampUpSeconds)
+                during: TimeSpan.FromSeconds(TestConfig.WorkloadA.SustainDurationSeconds)
+            ),
+            // Phase 3: Spike to stress system limits
+            Simulation.Inject(
+                rate: TestConfig.WorkloadA.SpikeRate,
+                interval: TimeSpan.FromSeconds(1),
+                during: TimeSpan.FromSeconds(TestConfig.WorkloadA.SpikeDurationSeconds)
             )
         );
 

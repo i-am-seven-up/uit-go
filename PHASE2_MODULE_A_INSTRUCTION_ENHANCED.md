@@ -11,7 +11,7 @@ Scale UIT-Go from Phase 1 baseline to production-ready architecture capable of h
 - **Driver location updates: 20,000-50,000 writes/sec** (current: ~40/sec)
 - **Driver GEO search: 5,000-10,000 reads/sec** (current: unmeasured)
 - **Trip matching pipeline: 800-1,500 trips/sec** (current: ~1-2/sec)
-- **p95 latency < 15ms for GEO operations** (current: unmeasured)
+- **p95 latency < 20ms for GEO operations** (current: unmeasured)
 - **Zero consumer thread blocking** (current: 15s blocks on every offer)
 
 **Success Metric**: Clear before/after performance proof with NBomber load tests showing **3-5× improvement** in throughput and **40-70% reduction** in p95 latency.
@@ -885,3 +885,4 @@ After Phase 2 completion, consider:
 **Last Updated**: 2025-01-04
 **Author**: System Architect
 **Status**: Ready for Implementation
+

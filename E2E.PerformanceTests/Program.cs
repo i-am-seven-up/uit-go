@@ -51,6 +51,12 @@ class Program
                     await WorkloadC_LocationUpdates.RunAsync();
                     break;
 
+                case "d":
+                case "workload-d":
+                case "geo-search":
+                    await WorkloadD_GeoSearchStress.RunAsync();
+                    break;
+
                 case "all":
                 case "":
                     await RunAllWorkloads();
@@ -138,6 +144,24 @@ class Program
             results.Add(("Workload C: Location Updates", false));
         }
 
+        Console.WriteLine();
+        Console.WriteLine("Waiting 10 seconds before next workload...");
+        await Task.Delay(10000);
+
+        // Workload D
+        Console.WriteLine("Starting Workload D in 5 seconds...");
+        await Task.Delay(5000);
+        try
+        {
+            await WorkloadD_GeoSearchStress.RunAsync();
+            results.Add(("Workload D: GEO Search Stress", true));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Workload D failed: {ex.Message}");
+            results.Add(("Workload D: GEO Search Stress", false));
+        }
+
         // Summary
         Console.WriteLine();
         Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
@@ -221,9 +245,10 @@ class Program
         Console.WriteLine("Usage: dotnet run [workload]");
         Console.WriteLine();
         Console.WriteLine("Workloads:");
-        Console.WriteLine("  a, workload-a, trip-creation     - Run Workload A (High-Volume Trip Creation)");
+        Console.WriteLine("  a, workload-a, trip-creation     - Run Workload A (Hardcore Trip E2E Matching Pipeline)");
         Console.WriteLine("  b, workload-b, driver-responses  - Run Workload B (Driver Accept/Decline Bursts)");
-        Console.WriteLine("  c, workload-c, location-updates  - Run Workload C (High-Frequency Location Updates)");
+        Console.WriteLine("  c, workload-c, location-updates  - Run Workload C (Hardcore Location Updates - 10K drivers)");
+        Console.WriteLine("  d, workload-d, geo-search        - Run Workload D (Hardcore GEO Search Stress - 8K searches/s)");
         Console.WriteLine("  all                              - Run all workloads sequentially");
         Console.WriteLine();
         Console.WriteLine("Examples:");

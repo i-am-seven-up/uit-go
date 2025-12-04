@@ -1,4 +1,5 @@
-﻿using DriverService.Api.Grpc;
+﻿using DriverService.Api.BackgroundServices;
+using DriverService.Api.Grpc;
 using DriverService.Api.Messaging;
 using DriverService.Application.Abstractions;
 using DriverService.Application.Services;
@@ -74,6 +75,7 @@ builder.Services.AddHostedService<TripRequestedConsumer>();
 builder.Services.AddHostedService<TripCreatedConsumer>();
 builder.Services.AddHostedService<TripAssignedConsumer>();
 builder.Services.AddHostedService<TripCancelledConsumer>();
+builder.Services.AddHostedService<PartitionCleanupWorker>();
 builder.Services.AddScoped<DriverLocationService>(); 
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis"))

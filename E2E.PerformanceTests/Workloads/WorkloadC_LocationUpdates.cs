@@ -15,7 +15,7 @@ public class WorkloadC_LocationUpdates
     public static async Task<ScenarioStats> RunAsync()
     {
         Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
-        Console.WriteLine("║   WORKLOAD C: HIGH-FREQUENCY LOCATION UPDATES            ║");
+        Console.WriteLine("║   WORKLOAD C: HARDCORE LOCATION UPDATES (HOT WRITE)     ║");
         Console.WriteLine("╚═══════════════════════════════════════════════════════════╝");
         Console.WriteLine();
 
@@ -23,11 +23,13 @@ public class WorkloadC_LocationUpdates
         using var redis = new RedisHelper();
         await redis.CleanupAsync();
 
+        // Use optimized driver count for hardcore test (can be changed via env var)
+        var driverCount = TestConfig.WorkloadC.OptimizedDrivers;
         var drivers = new List<(Guid id, double lat, double lng)>();
 
-        Console.WriteLine($"Creating {TestConfig.WorkloadC.ConcurrentDrivers} driver accounts...");
+        Console.WriteLine($"Creating {driverCount} driver accounts...");
 
-        for (int i = 0; i < TestConfig.WorkloadC.ConcurrentDrivers; i++)
+        for (int i = 0; i < driverCount; i++)
         {
             var driverId = Guid.NewGuid();
             var (lat, lng) = TestConfig.HCMCCoordinates.GetRandomLocation();
@@ -37,9 +39,13 @@ public class WorkloadC_LocationUpdates
         }
 
         Console.WriteLine($"✓ Created {drivers.Count} drivers");
-        Console.WriteLine($"Update interval: Every {TestConfig.WorkloadC.UpdateIntervalSeconds}s");
-        Console.WriteLine($"Test duration: {TestConfig.WorkloadC.DurationSeconds}s");
-        Console.WriteLine($"Expected updates per driver: {TestConfig.WorkloadC.DurationSeconds / TestConfig.WorkloadC.UpdateIntervalSeconds}");
+        Console.WriteLine();
+        Console.WriteLine("HARDCORE TEST PROFILE:");
+        Console.WriteLine($"  Drivers: {driverCount}");
+        Console.WriteLine($"  Update interval: Every {TestConfig.WorkloadC.UpdateIntervalSeconds}s");
+        Console.WriteLine($"  Expected throughput: ~{driverCount / TestConfig.WorkloadC.UpdateIntervalSeconds} updates/sec");
+        Console.WriteLine($"  Test duration: {TestConfig.WorkloadC.DurationSeconds}s");
+        Console.WriteLine($"  Total expected updates: {driverCount * (TestConfig.WorkloadC.DurationSeconds / TestConfig.WorkloadC.UpdateIntervalSeconds)}");
         Console.WriteLine();
 
         var initialMemory = await redis.GetMemoryUsageBytes();
@@ -77,7 +83,7 @@ public class WorkloadC_LocationUpdates
         .WithLoadSimulations(
             // Constant load: all drivers updating every N seconds
             Simulation.Inject(
-                rate: TestConfig.WorkloadC.ConcurrentDrivers,
+                rate: driverCount,
                 interval: TimeSpan.FromSeconds(TestConfig.WorkloadC.UpdateIntervalSeconds),
                 during: TimeSpan.FromSeconds(TestConfig.WorkloadC.DurationSeconds)
             )
@@ -197,7 +203,7 @@ public class WorkloadC_LocationUpdates
             { "final_memory_mb", finalMemory / (1024.0 * 1024.0) },
             { "memory_growth_mb", memoryGrowth },
             { "online_drivers", onlineDrivers },
-            { "concurrent_drivers", TestConfig.WorkloadC.ConcurrentDrivers },
+            { "concurrent_drivers", driverCount },
             { "update_interval_sec", TestConfig.WorkloadC.UpdateIntervalSeconds }
         });
 

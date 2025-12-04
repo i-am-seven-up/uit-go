@@ -88,8 +88,15 @@ public class RedisHelper : IDisposable
 
             // Delete geo index
             await _db.KeyDeleteAsync("drivers:online");
+            
+            // Delete partitioned geo indexes if they exist
+            var partitionKeys = server.Keys(pattern: "drivers:online:*").ToArray();
+            if (partitionKeys.Length > 0)
+            {
+                await _db.KeyDeleteAsync(partitionKeys);
+            }
 
-            Console.WriteLine($"✓ Redis cleaned ({driverKeys.Length} driver keys deleted)");
+            Console.WriteLine($"✓ Redis cleaned ({driverKeys.Length} driver keys, {partitionKeys.Length} partition keys deleted)");
         }
         catch (Exception ex)
         {
@@ -116,6 +123,20 @@ public class RedisHelper : IDisposable
             new HashEntry("lat", lat.ToString()),
             new HashEntry("lng", lng.ToString())
         });
+    }
+
+    public async Task<int> GetActivePartitionCount()
+    {
+        try
+        {
+            var server = _redis.GetServer(_redis.GetEndPoints().First());
+            var partitionKeys = server.Keys(pattern: "drivers:online:*").ToArray();
+            return partitionKeys.Length;
+        }
+        catch
+        {
+            return 0;
+        }
     }
 
     public async Task<long> GetMemoryUsageBytes()
