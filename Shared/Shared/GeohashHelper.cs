@@ -42,6 +42,50 @@ public static class GeohashHelper
     }
 
     /// <summary>
+    /// Gets only the relevant partition keys based on search radius.
+    /// More efficient than GetNeighborPartitions for small search areas.
+    /// </summary>
+    /// <param name="lat">Latitude</param>
+    /// <param name="lng">Longitude</param>
+    /// <param name="radiusKm">Search radius in kilometers</param>
+    /// <returns>List of Redis keys to query (1-9 partitions depending on radius)</returns>
+    public static List<string> GetRelevantPartitions(double lat, double lng, double radiusKm)
+    {
+        var center = CalculateGeohash(lat, lng, PRECISION);
+        var centerKey = $"drivers:online:{center}";
+
+        // Geohash precision 5 = ~4.9km cell size
+        // If radius < 2.5km, only search center partition (covers ~70% of area)
+        if (radiusKm < 2.5)
+        {
+            return new List<string> { centerKey };
+        }
+
+        // If radius < 5km, search center + 4 cardinal directions (N, S, E, W)
+        if (radiusKm < 5.0)
+        {
+            var neighbors = GetAdjacentGeohashes(center);
+            var partitions = new List<string> { centerKey };
+
+            // Add only cardinal directions (not diagonals)
+            // neighbors[0]=N, [1]=S, [2]=E, [3]=W (first 4 are cardinals)
+            if (neighbors.Count >= 4)
+            {
+                partitions.AddRange(neighbors.Take(4).Select(g => $"drivers:online:{g}"));
+            }
+
+            return partitions;
+        }
+
+        // For radius >= 5km, search all 9 partitions (center + 8 neighbors)
+        var allNeighbors = GetAdjacentGeohashes(center);
+        var allPartitions = new List<string> { centerKey };
+        allPartitions.AddRange(allNeighbors.Select(g => $"drivers:online:{g}"));
+
+        return allPartitions;
+    }
+
+    /// <summary>
     /// Calculates geohash for given coordinates at specified precision.
     /// </summary>
     private static string CalculateGeohash(double lat, double lng, int precision)

@@ -32,7 +32,7 @@ spec:
         - name: ASPNETCORE_ENVIRONMENT
           value: "Production"
         - name: ConnectionStrings__Default
-          value: "Host=postgres-driver;Port=5432;Database=uitgo_driver;Username=postgres;Password=postgres;Maximum Pool Size=50;Minimum Pool Size=5;Connection Idle Lifetime=300;Connection Pruning Interval=10"
+          value: "Host=postgres-driver;Port=5432;Database=uitgo_driver;Username=postgres;Password=postgres;Maximum Pool Size=100;Minimum Pool Size=10;Connection Idle Lifetime=300;Connection Pruning Interval=10"
         - name: ConnectionStrings__Redis
           value: "uit-go-redis:6379"
         - name: RabbitMQ__HostName

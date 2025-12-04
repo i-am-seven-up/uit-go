@@ -10,7 +10,8 @@ using Xunit.Abstractions;
 
 namespace TripService.IntegrationTests;
 
-public class TripCreationTests : IClassFixture<TripServiceWebApplicationFactory>, IAsyncLifetime
+[Collection("Integration Tests")]
+public class TripCreationTests : IAsyncLifetime
 {
     private readonly TripServiceWebApplicationFactory _factory;
     private readonly HttpClient _client;

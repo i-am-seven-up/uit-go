@@ -23,11 +23,11 @@ spec:
           name: redis
         resources:
           requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
             cpu: 500m
-            memory: 512Mi
+            memory: 256Mi
+          limits:
+            cpu: 2000m    # Increased from 500m - Redis needs more CPU for 8K searches/sec
+            memory: 1Gi   # Increased from 512Mi - Better headroom for GEO data
         volumeMounts:
         - name: redis-data
           mountPath: /data

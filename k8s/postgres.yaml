@@ -80,6 +80,8 @@ spec:
           value: "postgres"
         - name: POSTGRES_DB
           value: "uitgo_trip"
+        # Phase 2: Increase max_connections for high-load trip creation
+        args: ["-c", "max_connections=300", "-c", "shared_buffers=256MB"]
         resources:
           requests:
             cpu: 100m
@@ -134,6 +136,8 @@ spec:
           value: "postgres"
         - name: POSTGRES_DB
           value: "uitgo_driver"
+        # Phase 2: Increase max_connections for high-load driver operations
+        args: ["-c", "max_connections=300", "-c", "shared_buffers=256MB"]
         resources:
           requests:
             cpu: 100m

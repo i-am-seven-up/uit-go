@@ -21,6 +21,7 @@ public class TripServiceWebApplicationFactory : WebApplicationFactory<Program>, 
     private readonly PostgreSqlContainer _postgresContainer;
     private readonly RedisContainer _redisContainer;
     private readonly RabbitMqContainer _rabbitMqContainer;
+    private bool _containersStarted = false;
 
     public TripServiceWebApplicationFactory()
     {
@@ -44,6 +45,18 @@ public class TripServiceWebApplicationFactory : WebApplicationFactory<Program>, 
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // Ensure containers are started before configuring the web host
+        if (!_containersStarted)
+        {
+            Task.Run(async () =>
+            {
+                await _postgresContainer.StartAsync();
+                await _redisContainer.StartAsync();
+                await _rabbitMqContainer.StartAsync();
+                _containersStarted = true;
+            }).GetAwaiter().GetResult();
+        }
+
         // Override configuration FIRST before services are configured
         builder.UseSetting("Jwt:Secret", "your-super-secret-key-minimum-32-characters-long");
         builder.UseSetting("Jwt:Issuer", "test-issuer");
@@ -104,9 +117,14 @@ public class TripServiceWebApplicationFactory : WebApplicationFactory<Program>, 
 
     public async Task InitializeAsync()
     {
-        await _postgresContainer.StartAsync();
-        await _redisContainer.StartAsync();
-        await _rabbitMqContainer.StartAsync();
+        // Containers are already started in ConfigureWebHost
+        if (!_containersStarted)
+        {
+            await _postgresContainer.StartAsync();
+            await _redisContainer.StartAsync();
+            await _rabbitMqContainer.StartAsync();
+            _containersStarted = true;
+        }
 
         // Run migrations
         using var scope = Services.CreateScope();

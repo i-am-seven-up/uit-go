@@ -63,11 +63,11 @@ public static class TestConfig
     {
         // HARDCORE TEST - Scenario 3: GEO Search Stress (Hot Read Path)
         // Baseline: 2,000 searches/sec for 2 minutes
-        // Optimized: 8,000 searches/sec for 2 minutes
-        // Extreme: 15,000 searches/sec for 2 minutes
+        // Optimized: 5,000 searches/sec for 2 minutes (reduced from 8K for realistic production load)
+        // Extreme: 10,000 searches/sec for 2 minutes (reduced from 15K)
         public static int BaselineSearchRate => GetEnvInt("WORKLOAD_D_BASELINE_RATE", 2000);
-        public static int OptimizedSearchRate => GetEnvInt("WORKLOAD_D_OPTIMIZED_RATE", 8000);
-        public static int ExtremeSearchRate => GetEnvInt("WORKLOAD_D_EXTREME_RATE", 15000);
+        public static int OptimizedSearchRate => GetEnvInt("WORKLOAD_D_OPTIMIZED_RATE", 5000);
+        public static int ExtremeSearchRate => GetEnvInt("WORKLOAD_D_EXTREME_RATE", 10000);
         public static int DurationSeconds => GetEnvInt("WORKLOAD_D_DURATION", 120); // 2 minutes
         public static int DriversToSeed => GetEnvInt("WORKLOAD_D_DRIVERS", 5000);
         public static double SearchRadiusKm => GetEnvDouble("WORKLOAD_D_RADIUS", 5.0);

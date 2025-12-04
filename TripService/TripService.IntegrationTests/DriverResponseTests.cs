@@ -10,7 +10,8 @@ using Xunit.Abstractions;
 
 namespace TripService.IntegrationTests;
 
-public class DriverResponseTests : IClassFixture<TripServiceWebApplicationFactory>, IAsyncLifetime
+[Collection("Integration Tests")]
+public class DriverResponseTests : IAsyncLifetime
 {
     private readonly TripServiceWebApplicationFactory _factory;
     private readonly ITestOutputHelper _output;
