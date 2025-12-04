@@ -67,12 +67,23 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(
 
 builder.Services.AddScoped<IOfferStore, RedisOfferStore>();
 
+// ✅ Phase 2: Add Timeout Scheduler (eliminates blocking Task.Delay)
+builder.Services.AddScoped<TripOfferTimeoutScheduler>();
+
 if (!builder.Environment.IsEnvironment("Testing")) // Skip hosted services in testing environment
 {
+    // Existing consumers
     builder.Services.AddHostedService<TripOfferDeclinedConsumer>();
     builder.Services.AddHostedService<TripOfferedConsumer>();
     builder.Services.AddHostedService<DriverAcceptedTripConsumer>();
     builder.Services.AddHostedService<DriverDeclinedTripConsumer>();
+
+    // ✅ Phase 2: New consumers for non-blocking timeout handling
+    builder.Services.AddHostedService<TripAutoAssignedConsumer>();
+    builder.Services.AddHostedService<TripOfferTimeoutConsumer>();
+
+    // ✅ Phase 2: Background worker that polls for expired timeouts
+    builder.Services.AddHostedService<TripService.Api.BackgroundServices.OfferTimeoutWorker>();
 }
 
 builder.Services.AddGrpcClient<DriverQuery.DriverQueryClient>(o =>

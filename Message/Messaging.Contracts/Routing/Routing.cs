@@ -21,6 +21,8 @@ namespace Messaging.Contracts.Routing
             public const string TripAccepted = "trip.accepted";
             public const string TripOffered = "trip.offered";
             public const string TripOfferDeclined = "trip.offer.declined";
+            public const string TripOfferTimeout = "trip.offer.timeout";
+            public const string TripAutoAssigned = "trip.auto.assigned";
             public const string DriverAcceptedTrip = "driver.accepted.trip";
             public const string DriverDeclinedTrip = "driver.declined.trip";
 

@@ -16,26 +16,19 @@ namespace TripService.Api.Messaging
     public sealed class TripOfferedConsumer : BaseRabbitConsumer<TripOffered>
     {
         private readonly IOfferStore _offers;
-        private readonly ITripRepository _repo;
-        private readonly TripMatchService _match;
-        private readonly IEventPublisher _bus;
-        private readonly DriverQuery.DriverQueryClient _driverGrpc;
+        private readonly TripOfferTimeoutScheduler _timeoutScheduler;
+        private readonly ILogger<TripOfferedConsumer> _logger;
 
         public TripOfferedConsumer(
             ILogger<TripOfferedConsumer> log,
             IOptions<RabbitMqOptions> opt,
             IOfferStore offers,
-            ITripRepository repo,
-            TripMatchService match,
-            IEventPublisher bus,
-            DriverQuery.DriverQueryClient driverGrpc)
+            TripOfferTimeoutScheduler timeoutScheduler)
             : base(log, opt, Routing.Exchange)
         {
             _offers = offers;
-            _repo = repo;
-            _match = match;
-            _bus = bus;
-            _driverGrpc = driverGrpc;
+            _timeoutScheduler = timeoutScheduler;
+            _logger = log;
         }
 
         protected override string RoutingKey => Routing.Keys.TripOffered;
@@ -47,86 +40,30 @@ namespace TripService.Api.Messaging
             IModel channel,
             CancellationToken ct)
         {
-            // Chờ TTL
-            await Task.Delay(TimeSpan.FromSeconds(message.TtlSeconds), ct);
+            _logger.LogInformation(
+                "Received TripOffered event for Trip={TripId}, Driver={DriverId}, TTL={TtlSeconds}s",
+                message.TripId, message.DriverId, message.TtlSeconds);
 
-            var declined = await _offers.IsDeclinedAsync(message.TripId, message.DriverId, ct);
-            var stillExists = await _offers.ExistsAsync(message.TripId, message.DriverId, ct);
+            // ✅ NO MORE BLOCKING DELAY!
+            // Instead, schedule the timeout using Redis Sorted Set
+            await _timeoutScheduler.ScheduleTimeoutAsync(
+                message.TripId,
+                message.DriverId,
+                message.TtlSeconds);
 
-            if (declined)
-            {
-                var trip = await _repo.GetAsync(message.TripId, ct);
-                Console.WriteLine($"[OfferFinalizer] Declined Trip={message.TripId} Driver={message.DriverId}");
-                if (trip != null)
-                {
-                    // (tuỳ) publish notify user: driver từ chối, đang tìm tiếp
-                }
-                await FindAnotherDriverAsync(message.TripId, ct);
-                return;
-            }
+            // Store the pending offer in Redis
+            await _offers.SetPendingAsync(
+                message.TripId,
+                message.DriverId,
+                TimeSpan.FromSeconds(message.TtlSeconds),
+                ct);
 
-            if (!stillExists)
-            {
-                // Offer key không còn (có thể hết TTL do race). Không làm gì thêm.
-                return;
-            }
+            _logger.LogDebug(
+                "Trip offer scheduled: Trip={TripId}, Driver={DriverId}, ExpiresAt={ExpiresAt}",
+                message.TripId, message.DriverId, message.ExpiresAtUtc);
 
-            // AUTO-ASSIGN
-            var trip2 = await _repo.GetAsync(message.TripId, ct);
-            if (trip2 is null) return;
-
-            var resp = await _driverGrpc.MarkTripAssignedAsync(
-                new MarkTripAssignedRequest
-                {
-                    DriverId = message.DriverId.ToString(),
-                    TripId = message.TripId.ToString()
-                }, cancellationToken: ct);
-
-            if (!resp.Success) return;
-
-            trip2.AssignedDriverId = message.DriverId;
-            trip2.Status = TripStatus.DriverAccepted;
-            await _repo.UpdateAsync(trip2, ct);
-
-            var assigned = new TripAssigned(
-                TripId: trip2.Id,
-                DriverId: message.DriverId,
-                AssignedAtUtc: DateTime.UtcNow
-            );
-            await _bus.PublishAsync(Routing.Keys.TripAssigned, assigned, ct);
-
-            // (tuỳ) publish notify user/driver, bật realtime tracking
-            Console.WriteLine($"[OfferFinalizer] Assigned Trip={trip2.Id} Driver={message.DriverId}");
-        }
-
-        private async Task FindAnotherDriverAsync(Guid tripId, CancellationToken ct)
-        {
-            var trip = await _repo.GetAsync(tripId, ct);
-            if (trip is null) return;
-
-            // Get list of drivers already tried to exclude them
-            var triedDrivers = await _match.GetTriedDriversAsync(tripId);
-
-            var next = await _match.FindBestDriverAsync(
-                trip.StartLat,
-                trip.StartLng,
-                radiusKm: 20.0,
-                take: 10,
-                excludeDriverIds: triedDrivers);
-
-            if (next is null) return;
-
-            const int ttl = 15;
-
-            // Track this driver as tried
-            await _match.AddTriedDriverAsync(trip.Id, next.DriverId);
-
-            await _offers.SetPendingAsync(trip.Id, next.DriverId, TimeSpan.FromSeconds(ttl), ct);
-
-            var offered = new TripOffered(trip.Id, next.DriverId, ttl);
-            await _bus.PublishAsync(Routing.Keys.TripOffered, offered, ct);
-
-            Console.WriteLine($"[OfferFinalizer] Re-offer Trip={trip.Id} Driver={next.DriverId}");
+            // ✅ CONSUMER RETURNS IMMEDIATELY - NO BLOCKING!
+            // OfferTimeoutWorker will handle the timeout processing
         }
     }
 }
