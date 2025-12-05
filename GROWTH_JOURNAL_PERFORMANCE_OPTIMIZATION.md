@@ -166,6 +166,13 @@ bb7a45d INIT: Scaffolded monorepo
 **Ngày**: November 21-22, 2025  
 **Branch**: `straightforward`
 
+**Bài toán gặp phải**:
+- MVP code rất khó deploy (phải setup từng service riêng)
+- Không có Docker Compose → mất nhiều thời gian setup môi trường
+- YARP configuration phức tạp, khó debug routing
+- gRPC giữa services hay bị lỗi connection refused
+- Thiếu documentation → team members khó onboard
+
 **Mục tiêu**: Simplify deployment và improve developer experience
 
 **Kiến trúc MVP**:
@@ -248,6 +255,13 @@ bb7a45d INIT: Scaffolded monorepo
 **Ngày**: November 23, 2025  
 **Branch**: `straightforward` (continued)
 
+**Bài toán gặp phải**:
+- Làm sao tìm tài xế gần nhất trong hàng ngàn drivers online?
+- PostgreSQL query theo latitude/longitude rất chậm (full table scan)
+- Race condition: 2 passengers cùng lúc có thể được assign cùng 1 driver
+- Cần lock driver ngay khi assign để tránh double-booking
+- gRPC inter-service communication chưa biết cách setup đúng
+
 **Mục tiêu**: Tạo logic tìm tài xế gần nhất khi passenger tạo trip
 
 **Implementation**:
@@ -320,7 +334,15 @@ Key: driver:{driverId} (Hash)
 **Branch**: `uit-go-mvp` (continued)  
 **Document**: `PHASE_1_COMPLETED.md`
 
-**Vấn đề**: MVP chỉ có 4-5 states cơ bản, chưa đủ để handle full trip lifecycle
+**Bài toán gặp phải**:
+- MVP chỉ có 4-5 states cơ bản (Requested, InProgress, Completed, Cancelled)
+- Không track được driver accept/decline flow
+- Không có retry logic khi driver từ chối
+- Không biết trip đang ở stage nào (driver đang đến? đã đến? đang chạy?)
+- Thiếu audit trail → không debug được khi có bug
+- Invalid state transitions gây data corruption (VD: từ Completed nhảy về Requested)
+
+**Vấn đề cốt lõi**: MVP state machine quá đơn giản, không đủ để handle real-world trip lifecycle
 
 **Giải pháp**: Mở rộng thành 11 states với full validation
 
@@ -389,6 +411,15 @@ dotnet ef migrations add AddTripStateTracking
 ### Entry #5: Implement Event-Driven Architecture
 **Ngày**: November 25, 2025  
 **Branch**: `uit-go-mvp` (continued)
+
+**Bài toán gặp phải**:
+- Services đang coupling chặt chẽ (TripService gọi thẳng DriverService qua HTTP/gRPC)
+- Khi driver decline, phải manually retry tìm driver khác → code phức tạp
+- Không có cơ chế thông báo giữa services khi có sự kiện quan trọng
+- Nếu DriverService down, TripService cũng fail → không resilient
+- Khó scale: mỗi service phải biết về tất cả services khác
+
+**Vấn đề cốt lõi**: Direct coupling giữa services làm hệ thống khó scale và maintain
 
 **Mục tiêu**: Tách biệt services bằng events thay vì direct calls
 
@@ -775,6 +806,17 @@ Total: 10 tests, 10 passed, 0 failed
 **Ngày**: November 29, 2025 (Morning)  
 **Shock Level**: 🔥🔥🔥 CRITICAL
 
+**Bài toán gặp phải - HỆ thống sập hoàn toàn**:
+- Tưởng hệ thống chạy tốt → chạy test mới biết thảm họa
+- **Workload A**: 34% failure rate - PostgreSQL "too many clients"
+- **Workload B**: 100% failure - Index out of range
+- **Workload C**: 60% failure - Connection refused
+- **Workload D**: 100% failure - Socket exhaustion + 404 errors
+- Hệ thống không thể handle production load CHÚT NÀO
+
+**Nhận thức sốc**:
+> "Tôi vừa build xong MVP tưởng đã tốt, nhưng khi chạy load test thì hệ thống HOÀN TOÀN KHÔNG THỂ dùng được. Cần phân tích sâu root causes và fix từng vấn đề một cách có hệ thống."
+
 **Kết quả baseline tests**:
 
 #### Workload A (Trip Creation):
@@ -820,7 +862,16 @@ Errors:
 ### Entry #10: Root Cause Analysis - PostgreSQL Connection Exhaustion
 **Ngày**: November 29, 2025 (11:00 AM)
 
-**Investigation process**:
+**Bài toán**: Tại sao Workload A có 34% failure với lỗi "too many clients"?
+
+**Triệu chứng**:
+```
+PostgresException: 53300: sorry, too many clients already
+5,422 requests failed (34%)
+p95 Latency: 12,935ms (target: <200ms) - Chậm gấp 65 lần!
+```
+
+**Quá trình điều tra**:
 
 1. **Check PostgreSQL logs**:
    ```bash
@@ -850,9 +901,29 @@ Errors:
 
 ### Entry #11: Root Cause Analysis - Task.Delay Blocking Anti-Pattern
 **Ngày**: November 29, 2025 (1:00 PM)  
-**Severity**: 🔴 CRITICAL
+**Severity**: 🔴 CRITICAL - WORST BUG EVER FOUND
 
-**Code review phát hiện**:
+**Bài toán**: Tại sao hệ thống chỉ xử lý được 42 trips/second trong khi target là 800+?
+
+**Phát hiện sốc**:
+Khi review code, phát hiện **anti-pattern nghiêm trọng nhất** tôi từng gặp:
+
+```csharp
+// TripOfferedConsumer.cs - CODE TỒI ÁC!
+protected override async Task HandleAsync(TripOffered message, ...)
+{
+    using var scope = _serviceProvider.CreateScope();
+    var dbContext = scope.GetRequiredService<TripDbContext>();
+    
+    // ❌ DISASTER: Blocking 15 giây while holding DB connection!
+    await Task.Delay(15000);  // ← ĐÂY LÀ VẤN ĐỀ!
+    
+    var trip = await dbContext.Trips.FindAsync(tripId);
+    // Check if driver accepted...
+}
+```
+
+**Tại sao đây là thảm họa**:
 ```csharp
 // TripOfferedConsumer.cs (Phase 1)
 protected override async Task HandleAsync(TripOffered message, ...)
@@ -918,7 +989,18 @@ Total: 250 connections (safe within PostgreSQL limits)
 ### Entry #13: Fix #2 - Redis Timeout Scheduler (Eliminating Task.Delay)
 **Ngày**: November 29, 2025 (4:00 PM)  
 **Priority**: 🔴 CRITICAL  
-**Complexity**: HIGH
+**Complexity**: HIGH - Đây là fix phức tạp nhất!
+
+**Bài toán**: Làm sao loại bỏ Task.Delay(15s) mà vẫn giữ được timeout logic?
+
+**Thách thức**:
+- Không thể dùng Task.Delay (blocking threads)
+- Không thể dùng Timer (không scalable, mất memory)
+- Cần giải pháp distributed (hoạt động qua nhiều replicas)
+- Phải non-blocking hoàn toàn
+- Phải chính xác (không bỏ sót timeout)
+
+**Giải pháp**: Redis Sorted Set + Background Worker
 
 **Architecture redesign**:
 
