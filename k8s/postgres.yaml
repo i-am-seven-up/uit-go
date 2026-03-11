@@ -1,0 +1,165 @@
+# PostgreSQL for User Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-user
+  namespace: uit-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-user
+  template:
+    metadata:
+      labels:
+        app: postgres-user
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "uitgo_user"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        volumeMounts:
+        - name: pg-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pg-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-user
+  namespace: uit-go
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres-user
+---
+# PostgreSQL for Trip Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-trip
+  namespace: uit-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-trip
+  template:
+    metadata:
+      labels:
+        app: postgres-trip
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "uitgo_trip"
+        # Phase 2: Increase max_connections for high-load trip creation
+        args: ["-c", "max_connections=300", "-c", "shared_buffers=256MB"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        volumeMounts:
+        - name: pg-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pg-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-trip
+  namespace: uit-go
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres-trip
+---
+# PostgreSQL for Driver Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-driver
+  namespace: uit-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-driver
+  template:
+    metadata:
+      labels:
+        app: postgres-driver
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "uitgo_driver"
+        # Phase 2: Increase max_connections for high-load driver operations
+        args: ["-c", "max_connections=300", "-c", "shared_buffers=256MB"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        volumeMounts:
+        - name: pg-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pg-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-driver
+  namespace: uit-go
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres-driver

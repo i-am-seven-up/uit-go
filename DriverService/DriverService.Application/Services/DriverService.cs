@@ -34,12 +34,16 @@ namespace DriverService.Application.Services
 
         public async Task UpdateLocationAsync(Guid id, double lat, double lng, CancellationToken ct = default)
         {
+            // Optimization: Skip DB update for high-frequency location updates.
+            // Rely on Redis for real-time tracking.
+            /*
             var d = await _repo.GetAsync(id, ct) ?? new Domain.Domain.Driver { Id = id };
             d.Lat = lat;
             d.Lng = lng;
             d.UpdatedAt = DateTime.UtcNow;
 
             await _repo.UpsertAsync(d, ct);
+            */
 
             // đẩy vị trí (lng,lat) vào Redis GEO
             await _locationSvc.UpdateLocationAsync(id, lat, lng);

@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: uit-go-ingress
+  namespace: uit-go
+  annotations:
+    # Use NGINX Ingress Controller
+    kubernetes.io/ingress.class: nginx
+    
+    # SSL redirect (disabled for local development)
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    
+    # Request size limits
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    
+    # Timeouts
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "30"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "30"
+
+    # Enable HTTP/2
+    nginx.ingress.kubernetes.io/http2-push-preload: "true"
+    
+    # Load balancing algorithm
+    nginx.ingress.kubernetes.io/load-balance: "round_robin"
+
+    # Connection keep-alive
+    nginx.ingress.kubernetes.io/upstream-keepalive-connections: "100"
+
+    # RATE LIMITING DISABLED FOR PERFORMANCE TESTING
+    # Enable these in production to protect against abuse
+    # nginx.ingress.kubernetes.io/limit-rps: "100"
+    # nginx.ingress.kubernetes.io/limit-connections: "20"
+spec:
+  ingressClassName: nginx
+  # tls:
+  # - hosts:
+  #   - api.uit-go.com
+  #   secretName: tls-secret  # Create this secret with your SSL certificate
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 8080

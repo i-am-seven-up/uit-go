@@ -28,7 +28,7 @@ services:
     build:
       context: .
       dockerfile: ./deploy/docker/DriverService.Dockerfile
-    ports: ["5003:8080"]
+    ports: ["5003:8081"]
     environment:
       # Postgres
       - ConnectionStrings__Default=Host=postgres-driver;Port=5432;Database=uitgo_driver;Username=postgres;Password=postgres

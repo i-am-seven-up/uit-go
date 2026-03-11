@@ -1,0 +1,15 @@
+2025-12-03 11:29:03.130 +07:00 [INF] [ThreadId:23] NBomber 6.0.0 started a new session: 2025-12-03_04.29.08_session_c0600945
+2025-12-03 11:29:03.169 +07:00 [INF] [ThreadId:23] NBomber started as single node
+2025-12-03 11:29:03.171 +07:00 [INF] [ThreadId:23] License validation....
+2025-12-03 11:29:03.171 +07:00 [WRN] [ThreadId:23] THIS VERSION IS FREE ONLY FOR PERSONAL USE. You can't use it for an organization.
+2025-12-03 11:29:03.183 +07:00 [INF] [ThreadId:23] Reports folder: C:\Users\tophu\source\repos\uit-go\E2E.PerformanceTests\bin\Release\net8.0\reports\2025-12-03_04.29.08_session_c0600945
+2025-12-03 11:29:03.184 +07:00 [INF] [ThreadId:23] Plugins: no plugins were loaded
+2025-12-03 11:29:03.184 +07:00 [INF] [ThreadId:23] Reporting sinks: no reporting sinks were loaded
+2025-12-03 11:29:03.184 +07:00 [INF] [ThreadId:23] Starting init...
+2025-12-03 11:29:03.191 +07:00 [INF] [ThreadId:23] Target scenarios: trip_creation
+2025-12-03 11:29:03.193 +07:00 [INF] [ThreadId:23] Init finished
+2025-12-03 11:29:03.204 +07:00 [INF] [ThreadId:23] Starting bombing...
+2025-12-03 11:30:02.434 +07:00 [WRN] [ThreadId:7] Stopping test early: Stopping test because of too many fails. Scenario 'trip_creation' contains '5338' fails.
+2025-12-03 11:30:06.454 +07:00 [INF] [ThreadId:7] Calculating final statistics...
+2025-12-03 11:30:06.753 +07:00 [INF] [ThreadId:7] Reports saved in folder: C:\Users\tophu\source\repos\uit-go\E2E.PerformanceTests\reports\2025-12-03_04.29.08_session_c0600945
+2025-12-03 11:30:06.754 +07:00 [WRN] [ThreadId:7] THIS VERSION IS FREE ONLY FOR PERSONAL USE. You can't use it for an organization.

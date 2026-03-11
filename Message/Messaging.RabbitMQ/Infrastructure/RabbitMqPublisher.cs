@@ -32,7 +32,7 @@ namespace Messaging.RabbitMQ.Infrastructure
                 ClientProvidedName = $"{o.ClientName}-publisher",
                 DispatchConsumersAsync = true
             };
-            _conn = factory.CreateConnection();
+            _conn = RabbitMqConnectionHelper.ConnectWithRetry(factory);
             _ch = _conn.CreateModel();
             _ch.ExchangeDeclare(exchangeName, ExchangeType.Topic, durable: true);
         }
